@@ -2,7 +2,7 @@
 # 
 #
 
-class Projectile < Melee4Cercle
+class Projectile
 
   #
   # Accessor Methods
