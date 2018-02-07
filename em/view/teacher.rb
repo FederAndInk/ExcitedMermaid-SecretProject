@@ -19,7 +19,7 @@
       @flip = 1
     end
     
-    def move_To(x,y)
+    def moveTo(x,y)
       @posx = x
       @posy = y
     end
@@ -28,7 +28,7 @@
       return Hash["x" => @posx, "y" => @posy]
     end
     
-    def setmoving(yes)
+    def setmoving(yes = true)
         @moving = yes
       if @moving
         changed()

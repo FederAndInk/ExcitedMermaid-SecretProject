@@ -5,39 +5,68 @@ require("em/model/Boss")
 require("em/view/game")
 require 'em/model/Personnage'
 require 'em/model/Ennemi'
+
+class Terrain
+  @@entities = Hash.new()
+  def self.getNewName(name)
+    nameTmp = name
+    i = 1
+    while @@entities.has_key?(nameTmp)
+      nameTmp = name + i.to_s
+    end
+    return nameTmp
+  end
+end
+
+module EntiteList
+  BLANCHON = {:name => "Blanchon", :entite => Personnage.new(Terrain.getNewName("Blanchon"), 4, 0, 0, 0, 0)}
+  CERET = {:name => "Ceret", :entite => Personnage.new(Terrain.getNewName("Ceret"), 4, 0, 0, 0, 0)}
+end
+
 class Terrain
   #
   # Accessor Methods
   #
-  
   def initialize()
     @game = Game.new()
 
-    @entities = Hash.new()
+    newEntite(EntiteList::BLANCHON, 540, 920)
+    @game.teacher=(@@entities["Blanchon"][1])
 
-    perso = newPerso("Blanchon")
-    @entities.merge!(perso)
-
-    @game.show()
-  end
-
-  def entiteUpdate(action, entite)
-    case action
-    when Action::ENTITY_DIED
-      puts ("entity : " + entite.name + " died")
-      #      @entities[entite.name]
-    when Action::WEAPON_BROKE
-
+    newEntite(EntiteList::CERET, 4020, 1000)
+    @threadIHM = Thread.new do
+      @game.show()
+    end
+    while true
+      @@entities["Ceret"][1].moveLeft()
+      @@entities["Ceret"][1].setmoving(true)
+      sleep(0.1)
     end
   end
 
-  def entityViewUpdate(action, entity)
+  def entiteModelUpdate(action, mEntite)
+    vEntite = @@entities[mEntite.name][1]
+
+    case action
+    when Action::ENTITY_DIED
+      puts ("entity : " + mEntite.name + " died")
+      #      vEntite
+    when Action::WEAPON_BROKE
+
+    when Action::ENTITY_MOVED
+      puts("#{vEntite.nameId()} move to #{mEntite.position['x']}, #{mEntite.position['y']}")
+      vEntite.moveTo(mEntite.position['x'], mEntite.position['y'])
+    end
+  end
+
+  def entityViewUpdate(action, vEntity)
+    mEntite = @@entities[vEntity.nameId()][0]
+
     case action
     when Action::ENTITY_MOVED
-      entModel = @entities[entity.nameId()][0]
-      if entModel
-        entModel.position = entity.getPosition()
-        puts("#{entity.nameId()} is on #{entModel.position['x']}, #{entModel.position['y']}")
+      if mEntite
+        mEntite.position = vEntity.getPosition()
+        puts("#{vEntity.nameId()} is on #{mEntite.position['x']}, #{mEntite.position['y']}")
       end
     end
   end
@@ -45,29 +74,14 @@ class Terrain
 
   private
 
-  def newPerso(name)
-    newName = getNewName(name)
-    perso = Personnage.new(newName, 4, 0, 0, 0, 0, 0, 0)
-    perso.add_observer(self, :entiteUpdate)
-    map = Hash[newName => [perso, @game.newTeacher(name, newName, self)]]
-    return map
-  end
+  def newEntite(perso, x, y)
+    entite = perso[:entite].clone
+    entite.add_observer(self, :entiteModelUpdate)
 
-  def newEnnemi(name)
+    map = Hash[entite.name() => [entite, @game.newTeacher(perso[:name], entite.name(), self)]]
+    @@entities.merge!(map)
 
-  end
-
-  def newBoss(name)
-
-  end
-
-  def getNewName(name)
-    nameTmp = name
-    i = 1
-    while @entities.has_key?(nameTmp)
-      nameTmp = name + i.to_s
-    end
-    return nameTmp
+    entite.deplacer(x, y)
   end
 
 end

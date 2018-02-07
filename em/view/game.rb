@@ -3,6 +3,7 @@ require 'em/view/teacher'
 require 'em/view/background'
 
 class Game < Gosu::Window
+  attr_accessor(:teacher)
   def initialize
     super 4800,2700, false
 
@@ -15,11 +16,10 @@ class Game < Gosu::Window
 
   def newTeacher(name, nameId, observer)
     @toDraw << Teacher.new(self, name, nameId)
-    @teacher = @toDraw.last()
-    @teacher.add_observer(observer, :entityViewUpdate)
+    @toDraw.last().add_observer(observer, :entityViewUpdate)
     return @toDraw.last()
   end
-
+  
   def draw
     @toDraw.each(){ |drawable|
       drawable.draw
