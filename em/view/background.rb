@@ -23,7 +23,15 @@ class Background
       @pvArrayB = []
     end
   end
-
+  
+  def setPlayer(player)
+    @player = player
+  end
+  
+  def setBoss(boss)
+    @boss = boss
+  end
+  
   def setPvP(vie, vieMax)
     @pvArrayP.clear()
     if vie < vieMax
@@ -56,11 +64,7 @@ class Background
     end
     puts "#{@pvArrayB}"
   end
-
-  #  def addBuff(nom)
-  #    picture = Gosu::Image.new(window,ASSETPATH+"#{nom}Buffx20", false)
-  #    @buffArray.merge({nom, picture})
-  #  end
+  
   def addBuff(name)
     picture = Gosu::Image.new(@window,ASSETPATH+"#{name}Buffx20.png", false)
     @buffArray.push(picture)

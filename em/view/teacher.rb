@@ -3,7 +3,7 @@ require("observer")
 
 class Teacher
   include(Observable)
-  attr_reader :name, :nameId, :posy, :prio
+  attr_reader :name, :nameId, :posy, :prio, :flip
 
   SPEED = 20
   ATTACKSPEED = 75
@@ -14,6 +14,13 @@ class Teacher
     @isPrio = isPrio
     #      @image = Gosu::Image.new(window, "assets/Character#{name}x20.png", false)
     @walk = Gosu::Image.load_tiles(ASSETPATH+"Character#{name}Walkingx20.png",640,640)
+    if isPrio
+      @die = Gosu::Image.load_tiles(ASSETPATH+"Character#{name}Diex20.png", 640,640)
+      @hitted = Gosu::Image.new(@meh, ASSETPATH+"Character#{name}Hitx20.png", false)
+    else
+      @die = Gosu::Image.load_tiles(ASSETPATH+"BossDeath-Shee0x20t.png", 640,640)
+    end
+    @idle = Gosu::Image.new(@meh, ASSETPATH+"Character#{name}x20.png", false)
     @posx = 0
     @posy = 0
     @prio = @posy
@@ -21,6 +28,7 @@ class Teacher
     @image = @walk.first
     @state = "idle"
     @attack
+    @mbegin = 1
   end
 
   def setPrio(nb = @posy)
@@ -46,13 +54,15 @@ class Teacher
   end
 
   def setIdle
-    @state = "idle"
+    if @state != "dead"
+      @state = "idle"
+    end
   end
 
   def setAttack(type = "rien")
     #      puts "#{@attack}"
     @attack = type
-    @mBegin = [Gosu.milliseconds / ATTACKSPEED].first()
+    #    @mBegin = [Gosu.milliseconds / ATTACKSPEED].first()
   end
 
   def moveLeft
@@ -79,31 +89,50 @@ class Teacher
     @posy += SPEED if ((@posy - SPEED) < 2200-640)
   end
 
+  def setDead()
+    @state = "dead"
+    @mbegin = [Gosu.milliseconds / 150].first()
+  end
+
   def draw
-    @i = [Gosu.milliseconds / 125 % @walk.length]
     if @state == "move"
+      @i = [Gosu.milliseconds / 125 % @walk.length]
       @image = @walk.at(@i.first())
     elsif @state == "idle"
-      @image = Gosu::Image.new(@meh, ASSETPATH+"Character#{@name}x20.png", false)
+      @image = @idle
+    elsif @state == "hited"
+      @image = @hitted
+    elsif @state == "dead"
+      @m = [Gosu.milliseconds / 150].first()
+      @m -= @mbegin
+      if @isPrio and @m < @die.length
+        puts"blanchon meurt"
+        @image = @die.at(@m)
+      elsif @m < @die.length
+        @image = @die.at(@m)
+        @idle.draw(@posx, @posy, @prio, @flip)
+      else
+        @meh.deleteEntity(self)
+      end
     end
 
     #attack handler draw
-    if (@attack == "Estoc" or @attack == "Bas")
-      #        @image = @walk.at(@i.first())
-      @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attack}x20.png",640,640)
-      @m = [Gosu.milliseconds / ATTACKSPEED].first() - @mBegin
-      @attackPicture = @mele.at(@m)
-      if @attackPicture # test si on sort pas du vecteur
-        if @flip == -1
-          @attackPicture.draw @posx-220, @posy, @prio, @flip
-        else
-          @attackPicture.draw @posx+220, @posy, @prio, @flip
-        end
-      end
-      if (@m >= @mele.length()-1)
-        setAttack()
-      end
-    end
+    #    if (@attack == "Estoc" or @attack == "Bas")
+    #      #        @image = @walk.at(@i.first())
+    #      @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attack}x20.png",640,640)
+    #      @m = [Gosu.milliseconds / ATTACKSPEED].first() - @mBegin
+    #      @attackPicture = @mele.at(@m)
+    #      if @attackPicture # test si on sort pas du vecteur
+    #        if @flip == -1
+    #          @attackPicture.draw @posx-220, @posy, @prio, @flip
+    #        else
+    #          @attackPicture.draw @posx+220, @posy, @prio, @flip
+    #        end
+    #      end
+    #      if (@m >= @mele.length()-1)
+    #        setAttack()
+    #      end
+    #    end
     @image.draw @posx, @posy, @prio, @flip
   end
 end

@@ -29,18 +29,22 @@ class Terrain
   #
   def initialize()
     @game = Game.new()
+    @game.add_observer(self,:gameUpdate)
 
-    newEntite(EntiteList::BLANCHON, 540, 920)
+    newEntite(EntiteList::BLANCHON, 540, 920, true)
     @game.player=(@@entities["Blanchon"][1])
 
     newEntite(EntiteList::CERET, 4020, 1000)
     @threadIHM = Thread.new do
       @game.show()
     end
-    while true
       @@entities["Ceret"][1].moveLeft()
       @@entities["Ceret"][1].setmoving()
       sleep(0.1)
+      @@entities["Blanchon"][1].setDead()
+    while true
+      puts "ee"
+      sleep(10)
     end
   end
 
@@ -70,15 +74,20 @@ class Terrain
       end
     end
   end
+
+  def gameUpdate
+
+  end
+
   protected
 
   private
 
-  def newEntite(perso, x, y)
+  def newEntite(perso, x, y, isPrio = false)
     entite = perso[:entite].clone
     entite.add_observer(self, :entiteModelUpdate)
 
-    map = Hash[entite.name() => [entite, @game.newTeacher(perso[:name], entite.name(), self)]]
+    map = Hash[entite.name() => [entite, @game.newTeacher(perso[:name], entite.name(), self, isPrio)]]
     @@entities.merge!(map)
 
     entite.deplacer(x, y)
