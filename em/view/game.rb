@@ -1,46 +1,74 @@
-  require 'gosu'
-  require 'em/view/teacher'
-  require 'em/view/background'
-  class Game < Gosu::Window
-    def initialize
-      super 4800,2700, false
-      
-      @blanchon = Teacher.new self,"Blanchon"
-      @backdrop = Background.new self, "coridor"
-      
-      @blanchon.move_To(1500,1200)
-      
-    end
+require 'gosu'
+require 'em/view/teacher'
+require 'em/view/background'
+
+class Game < Gosu::Window
+  def initialize
+    super 4800,2660, false
+
+    @player = Teacher.new self,"Blanchon", "player"
+    @boss = Teacher.new(self,"Blanchon","boss")
+    @backdrop = Background.new self, "classroom", @player, @boss
+
+    @player.move_To(1500,1200)
+    @boss.move_To(3500,1200)
+
+    @keys = Array.new()
+    @backdrop.setPvP(5,5)
+    @backdrop.addBuff("staline")
+    @backdrop.addBuff("perso_face_32")
+    @backdrop.addBuff("staline")
+    @backdrop.removeBuff(2)
     
-    def draw
-      @backdrop.draw
-      @blanchon.draw 
-    end
-    
-#    def button_down(key)
-#        @blanchon.setmoving(true)
-#    end
-#    
-#    def button_up(key)
-#      @blanchon.setmoving(false)
-#    end
-    
-    def update
-      if button_down? char_to_button_id("z")
-        @blanchon.setmoving(true)
-        @blanchon.moveUp() 
-      elsif button_down? char_to_button_id("s")
-        @blanchon.setmoving(true)
-        @blanchon.moveDown()
-      elsif button_down? char_to_button_id("d")
-        @blanchon.setmoving(true)
-        @blanchon.moveRight()
-      elsif button_down? char_to_button_id("q")
-        @blanchon.setmoving(true)
-        @blanchon.moveLeft()
-      else
-        @blanchon.setmoving(false)
-      end
+    @backdrop.setPvB(3,5)
+  end
+
+  def draw
+    @backdrop.draw
+    @player.draw
+    @boss.draw()
+  end
+
+  def button_down(key)
+    k = button_id_to_char(key)
+    if ["z","q","s","d"].include?(k)
+      @keys.push(k)
     end
   end
+
+  def button_up(key)
+    k = button_id_to_char(key)
+    if ["z","q","s","d"].include?(k)
+      @keys.delete(k)
+    end
+  end
+
+  def update
+    case @keys.last()
+    when 'z'
+      @player.moveUp()
+      @player.setmoving
+
+    when 's'
+      @player.moveDown()
+      @player.setmoving
+
+    when 'd'
+      @player.moveRight()
+      @player.setmoving
+
+    when 'q'
+      @player.moveLeft()
+      @player.setmoving
+    else
+      @player.setIdle
+    end
+    if button_down?(Gosu::MS_LEFT)
+      @player.setAttack("estoc")
+    else 
+      @player.setAttack("meh")
+    end
+  end
+end
+
 Game.new.show

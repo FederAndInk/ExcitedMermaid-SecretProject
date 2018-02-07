@@ -1,7 +1,12 @@
   require "em/view/parameter"
+  require("observer")
   class Teacher
+    include(Observable)
+    attr_reader :name , :posy
+    
     SPEED = 20
-    def initialize(window, name)
+    ATTACKSPEED = 50
+    def initialize(window, name, type)
       @meh = window
       @name = name
 #      @image = Gosu::Image.new(window, "assets/Character#{name}x20.png", false)
@@ -9,21 +14,36 @@
       @posx = 0
       @posy = 0
       @image = @walk.first
-      @moving = false
-      @flip = 1
+      @state = "idle"
+      @attack
+      if type == "boss"
+        @flip = -1
+      else
+        @flip = 1
+      end
     end
     def move_To(x,y)
       @posx = x
       @posy = y
     end
-    def setmoving(yes)
-        @moving = yes
+    
+    def setmoving
+        @state = "move"
+        changed()
+        notify_observers([@posx,@posy], self)
+    end
+    def setIdle
+      @state = "idle"
+    end
+    
+    def setAttack(type)
+#      puts "#{@attack}"
+      @attack = type
     end
     
     def moveLeft
       @posx -= SPEED if ((@posx - SPEED) > 640-150)
       if @flip == 1
-        puts"#{@flip}"
         @posx +=640
       end
       @flip = -1
@@ -31,7 +51,6 @@
     def moveRight
       @posx += SPEED if ((@posx - SPEED) < 4800-480)
       if @flip == -1
-        puts"#{@flip}"
         @posx -=640
       end
       @flip = 1
@@ -45,14 +64,23 @@
     
     def draw
       @i = [Gosu.milliseconds / 125 % @walk.length]
-#      puts"#{@i}"
-#      puts"#{@walk.length}"
-      if @moving
+      if @state == "move"
         @image = @walk.at(@i.first())
-      else 
+      elsif @state == "idle"
         @image = Gosu::Image.new(@meh, ASSETPATH+"Character#{@name}x20.png", false)
       end
-      @image.draw @posx, @posy, 99, @flip
+      if @attack == "estoc"
+#        @image = @walk.at(@i.first())
+        @mele = Gosu::Image.load_tiles(ASSETPATH+"ParticleMelee1-Sheetx20.png",640,640)
+        @m = [Gosu.milliseconds / ATTACKSPEED % @mele.length]
+        @attackPicture = @mele.at(@m.first())
+        if @flip == -1
+          @attackPicture.draw @posx-220, @posy, 51, @flip
+        else
+          @attackPicture.draw @posx+220, @posy, 51, @flip       
+        end
+      end
+      @image.draw @posx, @posy, 50, @flip
     end
     
   end
