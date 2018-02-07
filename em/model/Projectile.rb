@@ -11,7 +11,7 @@ class Projectile < Entite
   #
   # Accessor Methods
   #
-  attr_accessor :direction, :entitySrc
+  attr_accessor :name, :direction, :entitySrc
 
 
   public
@@ -20,8 +20,8 @@ class Projectile < Entite
   end
   
   
-  def initialize(posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-     super(1,-100,-100,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+     super(name,1,-100,-100,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
    end
   
   #
@@ -37,14 +37,22 @@ class Projectile < Entite
   # 
   # * _departAbs_ array
   # * _direction_ Integer
-  def copyAndActive(departAbs, direction, entitySrc)
-    newCopy = self.clone
+  def copyAndActive(name,departAbs, direction, entitySrc)
+    newCopy = deep_clone()
     
-    newCopy.deplacer(departAbs[0],departAbs[1])
-    newCopy.entitySrc= entitySrc
-    newCopy.direction= direction
-    
-    @@projectilesActifs.push(newCopy)
+    puts entitySrc.class
+    if entitySrc.is_a?(Entite)
+      newCopy.name= name
+      newCopy.deplacer(departAbs[0],departAbs[1])
+      newCopy.entitySrc= entitySrc
+      newCopy.direction= direction
+      
+      @@projectilesActifs.push(newCopy)
+      
+    else
+      puts "c'est pas une entite!"
+    end
+    return newCopy
   end
 
   
@@ -70,7 +78,11 @@ class Projectile < Entite
     return hitable
   end
   
-  
+  def deep_clone
+    newClone = clone
+    newClone.position = @position.clone
+    return newClone
+  end
   
   protected
 
@@ -80,6 +92,8 @@ class Projectile < Entite
   
 
   private
+  
+  
 
 end
 

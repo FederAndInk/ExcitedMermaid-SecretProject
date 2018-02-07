@@ -82,7 +82,7 @@ class TestProj
     
     proj.copyAndActive([0,0,],[5,0],ennemi)
     
-    while(!Projectile.projectilesActifs.empty? && )
+    while(!Projectile.projectilesActifs.empty?)
       
       Projectile.projectilesActifs.each { 
             |projectile|

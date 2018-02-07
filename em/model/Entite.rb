@@ -36,11 +36,11 @@ class Entite < ElementGraphique
      end
    end
    
-   def perdreVie(degatsSubis)
+   def perdreVie(degatsSubis,entiteAttaquante)
      @vie -= degatsSubis
      if @vie <=0
        changed()
-       notify_observers(Action::ENTITY_DIED, self)
+       notify_observers(Action::ENTITY_DIED, self, entiteAttaquante)
      end
    end
    
