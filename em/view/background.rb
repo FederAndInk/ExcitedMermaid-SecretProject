@@ -94,14 +94,14 @@ class Background
     end
 
     if @boss
-      if @pvArrayB.count(1) == 0
-        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Fullx20.png", false)
-      elsif @pvArrayB.count(1) >= @pvArrayB.length-1
-        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Lowx20.png", false)
-      else @pvArrayB.count(1) > 1 and @pvArrayB.count(1) < @pvArrayB.length()
+#      if @pvArrayB.count(1) == 0
+#        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Fullx20.png", false)
+#      elsif @pvArrayB.count(1) >= @pvArrayB.length-1
+#        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Lowx20.png", false)
+#      else @pvArrayB.count(1) > 1 and @pvArrayB.count(1) < @pvArrayB.length()
         @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Normalx20.png", false)
         #    elsif @pvArrayP.count(1) == @pvArrayP.length()
-      end
+#      end
       @Ppicture.draw 4760,40,2, -1
     end
 

@@ -89,11 +89,12 @@ class Game < Gosu::Window
     else
       @player.setIdle
     end
-    #    if button_down?(Gosu::MS_LEFT)
+#        if button_down?(Gosu::MS_LEFT)
     #      @player.setAttack("Estoc")
     #    else
     #      @player.setAttack("meh")
-    #    end
+          
+#        end
   end
 end
 

@@ -35,13 +35,15 @@ class Terrain
     @game.player=(@@entities["Blanchon"][1])
 
     newEntite(EntiteList::CERET, 4020, 1000)
+    @game.boss=(@@entities["Ceret"][1])
+    
     @threadIHM = Thread.new do
       @game.show()
     end
       @@entities["Ceret"][1].moveLeft()
       @@entities["Ceret"][1].setmoving()
-      sleep(0.1)
-      @@entities["Blanchon"][1].setDead()
+      sleep(2)
+      @@entities["Blanchon"][1].setHited()
     while true
       puts "ee"
       sleep(10)
