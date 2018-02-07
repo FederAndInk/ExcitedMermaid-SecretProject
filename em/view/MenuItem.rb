@@ -15,7 +15,7 @@ class MenuItem
   
       def draw
           @active_image.draw(@x, @y, @z, 0.05, 0.05)
-          @textImage.draw(@x+45, @y+25, @z, 1, 1,  0xff_ff0000)
+          @textImage.draw((@x-@textImage.width/2)+100, @y+25, @z, 1, 1,  0xff_e43b44)
       end
   
       def update
@@ -45,5 +45,6 @@ class MenuItem
               @callback.call
           end
           puts(@text)
+          puts(@textImage.width/2)
       end
 end

@@ -8,14 +8,15 @@ class MainMenu < Gosu::Window
   def initialize
       super(640, 640, false)
       @cursor = Gosu::Image.new(self, ASSETPATH+"Curseurx20.png", false)
-      x = self.width / 2 - 100
-      y = self.height  / 2 - 100
+      x = 0
+      y = self.height - 100
       lineHeight = 150
+      lineWidth = 220
       self.caption = "red glasses"
       
       #array a modifier pour les boutons
       nbButton = 3
-      texts = [" jouer", "option", "quitter"]
+      texts = ["JOUER", "OPTIONS", "QUITTER"]
       
       items = Array.new(nbButton,"jouer")
       actions = Array[lambda { Game.new.show}, lambda {
@@ -25,7 +26,7 @@ class MainMenu < Gosu::Window
       @menu = Menu.new(self)
       for i in (0..items.size - 1)
         @menu.add_item(Gosu::Image.new(self, ASSETPATH+"#{items[i]}.png", false), x, y, 1, actions[i],texts[i], Gosu::Image.new(self, ASSETPATH+"#{items[i]}.png", false))
-        y += lineHeight
+        x += lineWidth
         puts(texts[i])
       end
       @back = Gosu::Image.new(self, ASSETPATH+"Jaquette.png", false)
