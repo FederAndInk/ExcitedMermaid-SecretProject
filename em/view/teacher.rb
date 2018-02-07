@@ -3,45 +3,46 @@ require("observer")
 
 class Teacher
   include(Observable)
-  attr_reader :name , :posy, :prio
+  attr_reader :name, :nameId, :posy, :prio
 
   SPEED = 20
   ATTACKSPEED = 75
-  def initialize(window, name, type)
+  def initialize(window, name, nameId, isPrio)
     @meh = window
     @name = name
-    @prio = 50
-    @type = type
+    @nameId = nameId
+    @isPrio = isPrio
     #      @image = Gosu::Image.new(window, "assets/Character#{name}x20.png", false)
     @walk = Gosu::Image.load_tiles(ASSETPATH+"Character#{name}Walkingx20.png",640,640)
     @posx = 0
     @posy = 0
+    @prio = @posy
+    @flip = 1
     @image = @walk.first
     @state = "idle"
     @attack
-    if type == "boss"
-      @flip = -1
-    else
-      @flip = 1
-    end
   end
-  
-  def setPrio(nb)
+
+  def setPrio(nb = @posy)
     @prio = nb
-    if @type == "player"
+    if @isPrio
       @prio += 1
     end
   end
-  
-  def move_To(x,y)
+
+  def moveTo(x,y)
     @posx = x
     @posy = y
   end
 
-  def setmoving
+  def getPosition()
+    return Hash["x" => @posx, "y" => @posy]
+  end
+
+  def setmoving()
     @state = "move"
     changed()
-    notify_observers([@posx,@posy], self)
+    notify_observers(Action::ENTITY_MOVED, self)
   end
 
   def setIdle
