@@ -34,6 +34,9 @@ class Game < Gosu::Window
     if ["z","q","s","d"].include?(k)
       @keys.push(k)
     end
+    if key == Gosu::MS_LEFT
+      @player.setAttack("Estoc")
+    end
   end
 
   def button_up(key)
@@ -63,11 +66,11 @@ class Game < Gosu::Window
     else
       @player.setIdle
     end
-    if button_down?(Gosu::MS_LEFT)
-      @player.setAttack("estoc")
-    else 
-      @player.setAttack("meh")
-    end
+#    if button_down?(Gosu::MS_LEFT)
+#      @player.setAttack("Estoc")
+#    else 
+#      @player.setAttack("meh")
+#    end
   end
 end
 
