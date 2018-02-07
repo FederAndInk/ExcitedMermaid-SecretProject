@@ -35,13 +35,15 @@ class Terrain
 
     newEntite(EntiteList::CERET, 4020, 1000)
     @threadIHM = Thread.new do
-      @game.show()
+      while true
+        @@entities["Ceret"][1].moveLeft()
+        @@entities["Ceret"][1].setmoving()
+        sleep(0.1)
+      end
     end
-    while true
-      @@entities["Ceret"][1].moveLeft()
-      @@entities["Ceret"][1].setmoving()
-      sleep(0.1)
-    end
+
+    @game.show()
+
   end
 
   def entiteModelUpdate(action, mEntite)
