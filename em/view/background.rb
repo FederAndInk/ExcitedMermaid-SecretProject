@@ -54,7 +54,6 @@ class Background
         @pvArrayB.push(0)
       end
     end
-    puts "#{@pvArrayB}"
   end
   
 #  def addBuff(nom)
@@ -64,12 +63,10 @@ class Background
   def addBuff(name)
     picture = Gosu::Image.new(@window,ASSETPATH+"#{name}Buffx20.png", false)
     @buffArray.push(picture)
-    puts"#{@buffArray}"
   end
   
   def removeBuff(pos)
     @buffArray.delete_at(pos)
-    puts"#{@buffArray}"
   end
   
   def draw

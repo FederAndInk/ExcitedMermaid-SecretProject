@@ -35,8 +35,6 @@ class Game < Gosu::Window
     @player.draw
     @boss.draw()
     @boss2.draw()
-    puts @player.prio()
-    puts @boss.prio()
   end
 
   def button_down(key)
@@ -86,4 +84,4 @@ class Game < Gosu::Window
   end
 end
 
-Game.new.show
+#Game.new.show
