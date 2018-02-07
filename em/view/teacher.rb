@@ -30,8 +30,10 @@
     
     def setmoving(yes)
         @moving = yes
+      if @moving
         changed()
         notify_observers(Action::ENTITY_MOVED, self)
+      end
     end
     
     def moveLeft
