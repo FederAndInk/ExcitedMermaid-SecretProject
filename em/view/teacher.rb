@@ -3,13 +3,15 @@ require("observer")
 
 class Teacher
   include(Observable)
-  attr_reader :name , :posy
+  attr_reader :name , :posy, :prio
 
   SPEED = 20
-  ATTACKSPEED = 50
+  ATTACKSPEED = 75
   def initialize(window, name, type)
     @meh = window
     @name = name
+    @prio = 50
+    @type = type
     #      @image = Gosu::Image.new(window, "assets/Character#{name}x20.png", false)
     @walk = Gosu::Image.load_tiles(ASSETPATH+"Character#{name}Walkingx20.png",640,640)
     @posx = 0
@@ -23,7 +25,14 @@ class Teacher
       @flip = 1
     end
   end
-
+  
+  def setPrio(nb)
+    @prio = nb
+    if @type == "player"
+      @prio += 1
+    end
+  end
+  
   def move_To(x,y)
     @posx = x
     @posy = y
@@ -82,19 +91,18 @@ class Teacher
       #        @image = @walk.at(@i.first())
       @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attack}x20.png",640,640)
       @m = [Gosu.milliseconds / ATTACKSPEED].first() - @mBegin
-      puts(@m)
       @attackPicture = @mele.at(@m)
       if @attackPicture # test si on sort pas du vecteur
         if @flip == -1
-          @attackPicture.draw @posx-220, @posy, 51, @flip
+          @attackPicture.draw @posx-220, @posy, @prio, @flip
         else
-          @attackPicture.draw @posx+220, @posy, 51, @flip
+          @attackPicture.draw @posx+220, @posy, @prio, @flip
         end
       end
       if (@m >= @mele.length()-1)
         setAttack()
       end
     end
-    @image.draw @posx, @posy, 50, @flip
+    @image.draw @posx, @posy, @prio, @flip
   end
 end

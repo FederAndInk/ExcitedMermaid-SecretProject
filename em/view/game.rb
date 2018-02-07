@@ -5,13 +5,16 @@ require 'em/view/background'
 class Game < Gosu::Window
   def initialize
     super 4800,2660, false
+    
 
     @player = Teacher.new self,"Blanchon", "player"
     @boss = Teacher.new(self,"Blanchon","boss")
+    @boss2 = Teacher.new(self,"Blanchon","boss")
     @backdrop = Background.new self, "classroom", @player, @boss
 
     @player.move_To(1500,1200)
     @boss.move_To(3500,1200)
+    @boss2.move_To(3700,1500)
 
     @keys = Array.new()
     @backdrop.setPvP(5,5)
@@ -22,11 +25,18 @@ class Game < Gosu::Window
     
     @backdrop.setPvB(3,5)
   end
+  
 
   def draw
+    @player.setPrio(@player.posy())
+    @boss.setPrio(@boss.posy())
+    @boss2.setPrio(@boss2.posy())
     @backdrop.draw
     @player.draw
     @boss.draw()
+    @boss2.draw()
+    puts @player.prio()
+    puts @boss.prio()
   end
 
   def button_down(key)
@@ -36,6 +46,8 @@ class Game < Gosu::Window
     end
     if key == Gosu::MS_LEFT
       @player.setAttack("Estoc")
+    elsif key == Gosu::MS_RIGHT
+      @player.setAttack("Bas")
     end
   end
 
