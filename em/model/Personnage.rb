@@ -10,10 +10,12 @@ class Personnage < Entite
 
 
   public
-  def initialize(vie_max,pos_x,pos_y,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-     super(vie_max,pos_x,pos_y,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name, vie_max,pos_x,pos_y,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+     super(name, vie_max,pos_x,pos_y,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
    end
-   
+  
+
+  
   
 end
 
