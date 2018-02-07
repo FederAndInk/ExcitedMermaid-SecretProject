@@ -1,7 +1,7 @@
 #
 # 
 #
-
+require 'em/model/Projectile'
 class DistBoule < Projectile
 
   #
@@ -10,17 +10,21 @@ class DistBoule < Projectile
 
 
   public
+  
+  def initialize(posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+   super(posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+ end
 
-  protected
-
-  #
-  # 
-  # * _entite_ em_model_Entite
-  def isHit(entite)
+  def nextStep(entites)
+    entites.each { 
+      |entity|
+      if(isHit(entity))
+        perdreVie(vie_max)
+      end
+    }
     
+    deplacer(position["x"] + direction[0],position["y"] + direction[1])
   end
-
-  private
 
 end
 

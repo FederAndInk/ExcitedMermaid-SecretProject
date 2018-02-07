@@ -1,7 +1,7 @@
 #
 # 
 #
-require 'em/model/intVector'
+
 require 'em/model/ModelActions'
 require 'observer'
 
@@ -10,17 +10,17 @@ class Entite
   #
   # Accessor Methods
   #
-  attr_accessor :vie, :position, :dimensions
+  attr_accessor :vie, :position, :hitbox
   attr_reader :vie_max
 
-   def initialize(vie_max,pos_x,pos_y,dim_x,dim_y)
+   def initialize(vie_max,pos_x,pos_y,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
      @position = Hash.new(0)
      @position["x"]=pos_x
      @position["y"]=pos_y
        
-     @dimensions = Hash.new(0)
-     @dimensions["x"]=dim_x
-     @dimensions["y"]=dim_y
+     @hitbox = Array.new
+     @hitbox[0]= {"x"=>posHb1_x,"y"=>posHb1_y}
+     @hitbox[1]= {"x"=>posHb2_x,"y"=>posHb2_y}
      
      @vie_max = vie_max
      @vie = @vie_max
@@ -42,12 +42,30 @@ class Entite
    end
    
    def deplacer(x,y)
-     @position["x"] += x
-     @position["y"] += y
+     @position["x"] = x
+     @position["y"] = y
    end
       
-   def getHitbox
-     return [{"x"=>@position["x"],"y"=>@position["y"]},{"x"=>@position["x"]+@dimensions["x"],"y"=>@position["y"]+@dimensions["y"]}]
+   def getHitboxRel
+     return @hitbox
+   end
+   
+   def getHitboxAbs
+     return [{"x"=>@position["x"]+@hitbox[0]["x"],"y"=>@position["y"]+@hitbox[0]["y"]},{"x"=>@position["x"]+@hitbox[1]["x"],"y"=>@position["y"]+@hitbox[1]["y"]}]     
+   end
+   
+   def isCollidedTo(entity)
+     collision = true
+     
+     thisHB = getHitboxAbs
+     entityHB = entity.getHitboxAbs
+     
+     if (entityHB[0]["x"] > thisHB[1]["x"] || entityHB[1]["x"] < thisHB[0]["x"] || entityHB[0]["y"] > thisHB[1]["y"] || entityHB[1]["y"] < thisHB[0]["y"])
+     then
+        collision = false
+     end
+     
+     return collision
    end
 end
 
