@@ -1,46 +1,54 @@
-  require 'gosu'
-  require 'em/view/teacher'
-  require 'em/view/background'
-  class Game < Gosu::Window
-    def initialize
-      super 4800,2700, false
-      
-      @blanchon = Teacher.new self,"Blanchon"
-      @backdrop = Background.new self, "coridor"
-      
-      @blanchon.move_To(1500,1200)
-      
-    end
-    
-    def draw
-      @backdrop.draw
-      @blanchon.draw 
-    end
-    
-#    def button_down(key)
-#        @blanchon.setmoving(true)
-#    end
-#    
-#    def button_up(key)
-#      @blanchon.setmoving(false)
-#    end
-    
-    def update
-      if button_down? char_to_button_id("z")
-        @blanchon.setmoving(true)
-        @blanchon.moveUp() 
-      elsif button_down? char_to_button_id("s")
-        @blanchon.setmoving(true)
-        @blanchon.moveDown()
-      elsif button_down? char_to_button_id("d")
-        @blanchon.setmoving(true)
-        @blanchon.moveRight()
-      elsif button_down? char_to_button_id("q")
-        @blanchon.setmoving(true)
-        @blanchon.moveLeft()
-      else
-        @blanchon.setmoving(false)
-      end
+require 'gosu'
+require 'em/view/teacher'
+require 'em/view/background'
+
+class Game < Gosu::Window
+  def initialize
+    super 4800,2700, false
+
+    @toDraw = []
+    @toDraw << Background.new(self, "coridor")
+
+    #      @blanchon.move_To(1500,1200)
+
+  end
+
+  def newTeacher(name, nameId, observer)
+    @toDraw << Teacher.new(self, name, nameId)
+    @teacher = @toDraw.last()
+    @teacher.add_observer(observer, :entityViewUpdate)
+    return @toDraw.last()
+  end
+
+  def draw
+    @toDraw.each(){ |drawable|
+      drawable.draw
+    }
+  end
+
+  #    def button_down(key)
+  #        @blanchon.setmoving(true)
+  #    end
+  #
+  #    def button_up(key)
+  #      @blanchon.setmoving(false)
+  #    end
+
+  def update
+    if button_down? char_to_button_id("z")
+      @teacher.moveUp()
+      @teacher.setmoving(true)
+    elsif button_down? char_to_button_id("s")
+      @teacher.moveDown()
+      @teacher.setmoving(true)
+    elsif button_down? char_to_button_id("d")
+      @teacher.moveRight()
+      @teacher.setmoving(true)
+    elsif button_down? char_to_button_id("q")
+      @teacher.moveLeft()
+      @teacher.setmoving(true)
+    else
+      @teacher.setmoving(false)
     end
   end
-Game.new.show
+end

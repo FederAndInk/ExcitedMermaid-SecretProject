@@ -1,9 +1,15 @@
   require "em/view/parameter"
+  require "observer"
   class Teacher
+    include(Observable)
     SPEED = 20
-    def initialize(window, name)
+    
+    attr_reader(:name, :nameId)
+    
+    def initialize(window, name, nameId)
       @meh = window
       @name = name
+      @nameId = nameId
 #      @image = Gosu::Image.new(window, "assets/Character#{name}x20.png", false)
       @walk = Gosu::Image.load_tiles(ASSETPATH+"Character#{name}Walkingx20.png",640,640)
       @posx = 0
@@ -12,12 +18,20 @@
       @moving = false
       @flip = 1
     end
+    
     def move_To(x,y)
       @posx = x
       @posy = y
     end
+    
+    def getPosition()
+      return Hash["x" => @posx, "y" => @posy]
+    end
+    
     def setmoving(yes)
         @moving = yes
+        changed()
+        notify_observers(Action::ENTITY_MOVED, self)
     end
     
     def moveLeft

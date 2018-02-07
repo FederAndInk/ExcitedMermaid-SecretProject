@@ -1,4 +1,4 @@
-require 'em/model/entite'
+require 'em/model/Entite'
 
 def affiche(entite)
   puts " ----- Resume de l'entité ----- "

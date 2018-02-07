@@ -2,10 +2,11 @@
 # 
 #
 require 'em/model/intVector'
-require 'em/model/ModelActions'
+require 'em/model/Actions'
+require 'em/model/ElementGraphique'
 require 'observer'
 
-class Entite
+class Entite < ElementGraphique
   include(Observable)
   #
   # Accessor Methods
@@ -13,7 +14,9 @@ class Entite
   attr_accessor :vie, :position, :dimensions
   attr_reader :vie_max
 
-   def initialize(vie_max,pos_x,pos_y,dim_x,dim_y)
+   def initialize(name, vie_max,pos_x,pos_y,dim_x,dim_y)
+     super(name)
+     
      @position = Hash.new(0)
      @position["x"]=pos_x
      @position["y"]=pos_y
@@ -37,7 +40,7 @@ class Entite
      @vie -= degatsSubis
      if @vie <=0
        changed()
-       notify_observers(ModelAction::ENTITY_DIED, self)
+       notify_observers(Action::ENTITY_DIED, self)
      end
    end
    
