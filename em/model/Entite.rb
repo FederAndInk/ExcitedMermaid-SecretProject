@@ -47,7 +47,7 @@ class Entite < ElementGraphique
     @position["x"] = x
     @position["y"] = y
     changed()
-    notify_observers(Action::ENTITY_MOVED, self, nil)
+    notify_observers(Action::ENTITY_MOVED, self, self)
   end
 
   def getHitboxRel

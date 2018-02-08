@@ -30,6 +30,8 @@ class Projectile < Entite
   # si la fin du projectile alors il est détruit
   # * _entites_ array
   def nextStep(entites)
+    puts self.name + " en vie à la position (" + self.position["x"].to_s + "," + self.position["y"].to_s+")? : " + (self.vie <=0 ? "No" : "Yes")
+
     entites.each { 
           |entity|
           if(isHit(entity))

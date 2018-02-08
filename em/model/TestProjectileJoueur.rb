@@ -14,7 +14,7 @@ class Test
   #
   def initialize()
     @entities = Hash.new()
-    @proj = ProjCaCDes.new("projDistPerd",20,0, 0, 10, 10)
+    @proj = ProjCaCDes.new("projDistPerd",200,0, 0, 4, 10)
 
     perso = newPerso("Blanchon")
     @perso = perso.values[0]
@@ -26,15 +26,17 @@ class Test
 
     distBoule = newProj(ProjDist.name)
     @entities.merge!(distBoule)
-    distBoule = newProj(ProjDist.name)
+distBoule = newProj(ProjDist.name)
     @entities.merge!(distBoule)
-
+distBoule = newProj(ProjDist.name)
+    @entities.merge!(distBoule)
+    
+    
     while(!Projectile.projectilesActifs.empty?)
- 
       Projectile.projectilesActifs.each {
         |projectile|
-        puts projectile.name + " en vie à la position (" + projectile.position["x"].to_s + "," + projectile.position["y"].to_s+")? : " + (projectile.vie <=0 ? "No" : "Yes")
         projectile.nextStep(@entities.values)
+        puts ""
       }
     end
   end
@@ -66,7 +68,7 @@ class Test
 
   def newProj(name)
     newName = getNewName(name)
-    proj = @proj.copyAndActive(newName,2,[0,0],[5,2],2,@ennemi)
+    proj = @proj.copyAndActive(newName,2,[10,10],[5,2],-1,@ennemi)
     proj.add_observer(self, :entiteUpdate)
     return {newName => proj}
   end
@@ -88,6 +90,7 @@ class Test
     i = 1
     while @entities.has_key?(nameTmp)
       nameTmp = name + i.to_s
+      i+=1
     end
     return nameTmp
   end
