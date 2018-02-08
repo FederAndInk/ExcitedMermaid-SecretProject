@@ -5,9 +5,11 @@ require("em/model/Boss")
 require("em/view/game")
 require 'em/model/Personnage'
 require 'em/model/Ennemi'
+require 'em/model/Arme'
 
 class Terrain
   @@entities = Hash.new()
+  @@armesAuSol = Hash.new
   def self.getNewName(name)
     nameTmp = name
     i = 1
@@ -19,9 +21,11 @@ class Terrain
 end
 
 module EntiteList
-  BLANCHON = {:name => "Blanchon", :entite => Personnage.new(Terrain.getNewName("Blanchon"), 4, 0, 0, 0, 0)}
-  CERET = {:name => "Ceret", :entite => Personnage.new(Terrain.getNewName("Ceret"), 4, 0, 0, 0, 0)}
+  BLANCHON = {:name => "Blanchon", :entite => Personnage.new(Terrain.getNewName("Blanchon"), 4, 0, 0, 0, 0,0)}
+  CERET = {:name => "Ceret", :entite => Personnage.new(Terrain.getNewName("Ceret"), 4, 0, 0, 0, 0,0)}
 end
+
+
 
 class Terrain
   #
@@ -41,11 +45,20 @@ class Terrain
         sleep(0.1)
       end
     end
+    
+    newArmeAleatoireAuSol()
 
     @game.show()
 
   end
 
+  def armeModelUpdate(action, mArme)
+    case action
+      when Action::WEAPON_BROKE
+    end
+    
+  end
+  
   def entiteModelUpdate(action, mEntite)
     vEntite = @@entities[mEntite.name][1]
 
@@ -53,7 +66,7 @@ class Terrain
     when Action::ENTITY_DIED
       puts ("entity : " + mEntite.name + " died")
       #      vEntite
-    when Action::WEAPON_BROKE
+    
 
     when Action::ENTITY_MOVED
       puts("#{vEntite.nameId()} move to #{mEntite.position['x']}, #{mEntite.position['y']}")
@@ -86,4 +99,34 @@ class Terrain
     entite.deplacer(x, y)
   end
 
+  
+  
+  def newArmeAleatoireAuSol
+    i = rand(4)
+        
+    
+    arme = nil
+    case i
+    when 0
+      arme = Arme.getArme(Arme::REGLE.name)
+    when 1
+      arme = Arme.getArme(Arme::CHAISE.name)
+    when 2
+      arme = Arme.getArme(Arme::AGRAFEUSE.name)
+    when 3
+      arme = Arme.getArme(Arme::SHURIKEN.name)
+    end
+    arme.add_observer(self, :armeModelUpdate)   
+    
+    newArmeName = Terrain.getNewName(arme.name)
+    
+    map = Hash[newArmeName => [arme, @game.newTeacher(arme.name(), newArmeName, self)]]
+    @@armesAuSol.merge!(map)
+    
+    
+    x = rand(210...3801)
+    y = rand(770...2051)
+    arme.deplacer(x,y)
+  end
+  
 end

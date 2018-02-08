@@ -8,7 +8,7 @@ class EntiteAttaquante < Entite
   end
   
   def attaquer(direction)
-    if(@arme != nil)
+    if(@arme != nil && !subitEffet?(Effect::BLIND.name))
       @arme.activer(posArme,direction,self)
     end
   end

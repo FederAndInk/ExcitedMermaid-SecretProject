@@ -7,6 +7,7 @@ require("em/model/ProjDist")
 require("em/model/ProjDistPerf")
 require("em/model/ProjDistZigZag")
 require("em/model/ProjCaCDes")
+require("em/model/Effect")
 
 class Test
   #
@@ -14,7 +15,7 @@ class Test
   #
   def initialize()
     @entities = Hash.new()
-    @proj = ProjCaCDes.new("projDistPerd",200,0, 0, 4, 10)
+    @proj = ProjCaCDes.new("projDistPerd",200,0, 0, 4, 10,[Effect::SLOW])
 
     perso = newPerso("Blanchon")
     @perso = perso.values[0]
@@ -60,7 +61,7 @@ distBoule = newProj(ProjDist.name)
 
   def newPerso(name)
     newName = getNewName(name)
-    perso = Personnage.new(newName, 4, 0, 0, 50, 50)
+    perso = Personnage.new(newName, 4, 0, 0, 50, 50,0)
     perso.deplacer(100,0)
     perso.add_observer(self, :entiteUpdate)
     return {newName => perso}
@@ -75,7 +76,7 @@ distBoule = newProj(ProjDist.name)
 
   def newEnnemi(name)
     newName = getNewName(name)
-    ennemi = Ennemi.new(newName, 4, 0, 0, 50, 50)
+    ennemi = Ennemi.new(newName, 4, 0, 0, 50, 50,0)
     ennemi.deplacer(50, 0)
     ennemi.add_observer(self, :entiteUpdate)
     return {newName => ennemi}

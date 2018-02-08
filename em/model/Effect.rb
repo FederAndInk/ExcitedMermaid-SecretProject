@@ -22,9 +22,9 @@ class Effect
   def self.getEffect(nameEffect)
     case nameEffect
     when "slow"
-      effet = SLOW.clone
+      effet =  SLOW.clone
     when "root"
-      effet = ROOT.clone
+      effet = ROOT.deep_dup
     when "blind"
       effet = BLIND.clone
     when "weakness"

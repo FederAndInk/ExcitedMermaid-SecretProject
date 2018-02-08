@@ -10,8 +10,8 @@ class Ennemi < EntiteAttaquante
   #
 
   public
-  def initialize(name,vie_max,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-    super(name,vie_max,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,vie_max,posHb1_x,posHb1_y,posHb2_x,posHb2_y, posArme, arme=nil)
+    super(name,vie_max,posHb1_x,posHb1_y,posHb2_x,posHb2_y, posArme, arme)
   end
 
 end

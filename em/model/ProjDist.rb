@@ -11,8 +11,8 @@ class ProjDist < Projectile
 
   public
   
-  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-   super(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
+   super(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
  end
 
   def hit(entity)

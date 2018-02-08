@@ -7,8 +7,8 @@ class ProjDistZigZag < Projectile
   attr_accessor :y_limit
   public
   
-  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-    super(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
+    super(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
  end
   
   def hit(entity)
@@ -35,8 +35,6 @@ def copyAndActive(name,degats,departAbs, direction, entitySrc)
       newCopy.deplacer(departAbs[0],departAbs[1])
       newCopy.entitySrc= entitySrc
       newCopy.direction= direction
-
-      @@projectilesActifs.push(newCopy)
 
     else
       puts "c'est pas une entite!"

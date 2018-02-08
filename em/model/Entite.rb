@@ -3,6 +3,7 @@
 #
 
 require 'em/model/Actions'
+require("em/model/Effect")
 require 'em/model/ElementGraphique'
 require 'observer'
 
@@ -37,7 +38,7 @@ class Entite < ElementGraphique
   end
   
   def subitEffet?(nomEffet)
-    answser = false
+    answer = false
     effetsSubis.each { 
               |effet|
               if(effet.class.name == "Effect" && effet.name == nomEffet)
@@ -78,21 +79,21 @@ class Entite < ElementGraphique
     bonusX = 0
     bonusY = 0
     
-    if(subitEffet?(Effet.SLOW.name))
+    if(subitEffet?(Effect::SLOW.name))
       malusX = deplaX *0.2
       malusY = deplaY *0.2
     end  
-    if(subitEffet?(Effet.SPEED.name))
+    if(subitEffet?(Effect::SPEED.name))
       bonusX = deplaX *0.2
       bonusY = deplaY *0.2
     end
     
     
-    if(!subitEffet?(Effet.ROOT.name))
+    if(!subitEffet?(Effect::ROOT.name))
       @position["x"] += deplaX -malusX +bonusX
       @position["y"] += deplaY -malusY +bonusY
       changed()
-      notify_observers(Action::ENTITY_MOVED, self, self)
+      notify_observers(Action::ENTITY_MOVED, self)
     end
   end
 

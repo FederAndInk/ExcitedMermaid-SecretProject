@@ -9,8 +9,8 @@ class ProjCaCDes < Projectile
   #
   attr_accessor :alreadyHitEntity, :angleDes, :r, :nbdepla
   public
-  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-    super(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
+    super(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
     @r = Array.new(2)
     @nbdepla = 0
   end
