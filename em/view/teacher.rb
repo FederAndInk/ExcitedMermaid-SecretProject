@@ -33,7 +33,7 @@ class Teacher
     @mbegin = 1
     @hittedState = 999
     @weapon = nil
-    @weaponType = "RANGED"
+    @weaponType 
   end
 
   def setPrio(nb = @posy)
@@ -47,7 +47,7 @@ class Teacher
     @posx = x
     @posy = y
   end
-  
+
   def setWeapon(weapon, weaponType)
     @weapon = weapon
     @weaponPicture = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
@@ -125,7 +125,7 @@ class Teacher
     if @state == "move"
       @i = [Gosu.milliseconds / 125 % @walk.length]
       @image = @walk.at(@i.first())
-#      @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
+      @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
     elsif @state == "idle"
       @image = @idle
       @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
@@ -152,21 +152,46 @@ class Teacher
         @meh.deleteEntity(self)
       end
     end
+#    bx = @posx + 211
+#    by = @posy + 394
+#    ox = @posx + 273
+#    oy = @posy + 231
+    if @flip == 1
+      bx = @posx + 280
+      by = @posy + 320
+      ox = @posx + 273
+      oy = @posy + 231
+    else
+      bx = @posx + 280 - 535
+      by = @posy + 320
+      ox = @posx + 273 - 537
+      oy = @posy + 231
+    end
     cur = @meh.getCursorPos()
     ax = cur[0]
     ay = cur[1]
-    bx = 210
-    by = 393
-    oy = @posx+273
-    ox = @posy+231
-#    angle = Math.atan2(p3y - p1y, p3x - p1x) - atan2(p2y - p1y, p2x, p1x)
-    angle = Math.tan(((ax-ox)*(by-oy)+(ay-oy)*(bx-ox)) / ((ax-ox)*(bx-ox)-(ay-oy)*(by-oy)))**(-1)
-
-#    if @weaponType == MELEE
-#      @arm.draw @posx, @posy, @prio, @flip
-#    else
+    #    angle = Math.atan2(p3y - p1y, p3x - p1x) - atan2(p2y - p1y, p2x, p1x)
+    angle = Math.atan(((ax-ox)*(by-oy)+(ay-oy)*(bx-ox)) / ((ax-ox)*(bx-ox)-(ay-oy)*(by-oy)))
+    angle = (angle*180)/(Math::PI)
+#    if(angle < 0)
+#      angle = 180 + angle;
 #    end
-    
+    a = (by-oy ) / ((bx-ox)*1000000000000**1000000000)
+    b = oy-a*ox
+    y = a*ax+b
+    if (y > ay)
+      puts("y = "+"#{y}")
+      puts(cur[1])
+      angle = angle + 180
+    end
+    #    if angle < 0
+    #      angle = angle + 180
+    #    end
+    #    if @weaponType == MELEE
+    #      @arm.draw @posx, @posy, @prio, @flip
+    #    else
+    #    end
+
     #attack handler draw
     #    if (@attack == "Estoc" or @attack == "Bas")
     #      #        @image = @walk.at(@i.first())
@@ -185,14 +210,17 @@ class Teacher
     #      end
     #    end
     @image.draw @posx, @posy, @prio, @flip, 1, colour
-    if @weaponType == "RANGED"
-      pointa = (@arm.width() - (@arm.width() - 273)) / @arm.width 
-      pointb = (@arm.height() - (@arm.height() - 231)) / @arm.height()
-      puts(pointa, pointb)
-      @arm.draw_rot @posx, @posy,@flip, angle, pointa, pointb
-      
-    elsif @state == "dead" or @state == "hited" 
-      puts"dead"
+    if @state == "dead" or @state == "hited"
+      puts"non"
+    elsif @weaponType == "RANGED" and !(@state == "dead" or @state == "hited")
+      pointa = (@arm.width().to_f - (@arm.width().to_f - 273.0)) / @arm.width.to_f
+      pointb = (@arm.height().to_f - (@arm.height().to_f - 231.0)) / @arm.height().to_f
+#      puts(angle)
+      if @flip == 1
+        @arm.draw_rot @posx+273, @posy+231,@prio, angle, pointa, pointb, @flip
+      else
+        @arm.draw_rot @posx-273, @posy+231,@prio, angle, pointa, pointb, @flip
+      end
     else
       @arm.draw @posx, @posy, @prio, @flip, 1
     end

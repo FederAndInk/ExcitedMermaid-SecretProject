@@ -78,7 +78,7 @@ class Background
   end
 
   def draw
-    @cursorPicture.draw(@window.getCursorPos()[0]-20,@window.getCursorPos()[1]-20,99, 0.2, 0.2)
+    @cursorPicture.draw(@window.getCursorPos()[0]-40,@window.getCursorPos()[1]-40,99, 0.2, 0.2)
     @wall.draw 0,0,0
     #FIXME : add methods portrait
     @portrait.draw 40,40, 0
