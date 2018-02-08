@@ -31,6 +31,9 @@ class Terrain
   #
   def initialize()
     @game = Game.new()
+    
+    @intervalleApparitionArme = 3
+    @lastApparitionArme = Time.now 
 
     newEntite(EntiteList::BLANCHON, 540, 920)
     @game.player=(@@entities["Blanchon"][1])
@@ -38,13 +41,15 @@ class Terrain
     newEntite(EntiteList::CERET, 4020, 1000)
     @threadIHM = Thread.new do
       while true
-        @@entities["Ceret"][1].moveLeft()
-        @@entities["Ceret"][1].setmoving()
-        sleep(0.1)
+        if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length <3))
+          newArmeAleatoireAuSol()
+          @intervalleApparitionArme = rand(5...16)
+          @lastApparitionArme = Time.now 
+        end
       end
     end
 
-    newArmeAleatoireAuSol()
+   
 
     @game.show()
 
