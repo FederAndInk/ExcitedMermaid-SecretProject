@@ -1,5 +1,6 @@
 require 'gosu'
 require 'em/view/teacher'
+require 'em/view/VArme'
 require 'em/view/background'
 
 class Game < Gosu::Window
@@ -16,6 +17,12 @@ class Game < Gosu::Window
 
   def newTeacher(name, nameId, observer, isPrio = false)
     @toDraw << Teacher.new(self, name, nameId, isPrio)
+    @toDraw.last().add_observer(observer, :entityViewUpdate)
+    return @toDraw.last()
+  end
+
+  def newArme(name, nameId, observer, isPrio = false)
+    @toDraw << VArme.new(self, name, nameId, isPrio)
     @toDraw.last().add_observer(observer, :entityViewUpdate)
     return @toDraw.last()
   end

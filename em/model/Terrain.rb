@@ -25,8 +25,6 @@ module EntiteList
   CERET = {:name => "Ceret", :entite => Personnage.new(Terrain.getNewName("Ceret"), 4, 0, 0, 0, 0,0)}
 end
 
-
-
 class Terrain
   #
   # Accessor Methods
@@ -45,7 +43,7 @@ class Terrain
         sleep(0.1)
       end
     end
-    
+
     newArmeAleatoireAuSol()
 
     @game.show()
@@ -53,12 +51,17 @@ class Terrain
   end
 
   def armeModelUpdate(action, mArme)
-    case action
-      when Action::WEAPON_BROKE
-    end
+    vArme = @@armesAuSol[mArme.name][1]
     
+    case action
+    when Action::WEAPON_BROKE
+    when Action::ENTITY_MOVED
+      puts("#{vArme.nameId()} move to #{mArme.position['x']}, #{mArme.position['y']}")
+      vArme.moveTo(mArme.position['x'], mArme.position['y'])
+    end
+
   end
-  
+
   def entiteModelUpdate(action, mEntite)
     vEntite = @@entities[mEntite.name][1]
 
@@ -66,7 +69,6 @@ class Terrain
     when Action::ENTITY_DIED
       puts ("entity : " + mEntite.name + " died")
       #      vEntite
-    
 
     when Action::ENTITY_MOVED
       puts("#{vEntite.nameId()} move to #{mEntite.position['x']}, #{mEntite.position['y']}")
@@ -99,12 +101,9 @@ class Terrain
     entite.deplacer(x, y)
   end
 
-  
-  
   def newArmeAleatoireAuSol
     i = rand(4)
-        
-    
+
     arme = nil
     case i
     when 0
@@ -116,17 +115,16 @@ class Terrain
     when 3
       arme = Arme.getArme(Arme::SHURIKEN.name)
     end
-    arme.add_observer(self, :armeModelUpdate)   
-    
+    arme.add_observer(self, :armeModelUpdate)
+
     newArmeName = Terrain.getNewName(arme.name)
-    
-    map = Hash[newArmeName => [arme, @game.newTeacher(arme.name(), newArmeName, self)]]
+
+    map = Hash[newArmeName => [arme, @game.newArme(arme.name(), newArmeName, self)]]
     @@armesAuSol.merge!(map)
-    
-    
+
     x = rand(210...3801)
     y = rand(770...2051)
-    arme.deplacer(x,y)
+    arme.deplacer(x, y)
   end
-  
+
 end
