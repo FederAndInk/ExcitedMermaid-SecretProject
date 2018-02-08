@@ -30,7 +30,13 @@ class Terrain
   # Accessor Methods
   #
   def initialize()
-    @game = Game.new()
+    @game = Game.new(lambda{
+      if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length <3))
+        newArmeAleatoireAuSol()
+        @intervalleApparitionArme = rand(5...16)
+        @lastApparitionArme = Time.now 
+      end
+    })
     
     @intervalleApparitionArme = 3
     @lastApparitionArme = Time.now 
@@ -39,16 +45,6 @@ class Terrain
     @game.player=(@@entities["Blanchon"][1])
 
     newEntite(EntiteList::CERET, 4020, 1000)
-    @threadIHM = Thread.new do
-      while true
-        if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length <3))
-          newArmeAleatoireAuSol()
-          @intervalleApparitionArme = rand(5...16)
-          @lastApparitionArme = Time.now 
-        end
-      end
-    end
-
    
 
     @game.show()

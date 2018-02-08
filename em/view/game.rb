@@ -5,9 +5,11 @@ require 'em/view/background'
 
 class Game < Gosu::Window
   attr_accessor(:player)
-  def initialize
+  def initialize(function)
     super 4800,2660, false
 
+    @function = function
+    
     @toDraw = []
     @toDraw << Background.new(self, "classroom")
 
@@ -56,6 +58,7 @@ class Game < Gosu::Window
   end
 
   def update
+    @function.call()
     case @keys.last()
     when 'z'
       @player.moveUp()
