@@ -6,10 +6,16 @@ require("em/view/game")
 require 'em/model/Personnage'
 require 'em/model/Ennemi'
 require 'em/model/Arme'
+require 'mutex_m'
 
 class Terrain
   @@entities = Hash.new()
   @@armesAuSol = Hash.new
+  @@nbArmes = 0
+  def self.armesAuSol
+    return @@armesAuSol
+  end
+
   def self.getNewName(name)
     nameTmp = name
     i = 1
@@ -30,22 +36,23 @@ class Terrain
   # Accessor Methods
   #
   def initialize()
+    @intervalleApparitionArme = 3
+    @lastApparitionArme = Time.now
+
     @game = Game.new(lambda{
-      if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length <3))
+      if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@nbArmes < 3))
+        @@nbArmes += 1
         newArmeAleatoireAuSol()
         @intervalleApparitionArme = rand(5...16)
-        @lastApparitionArme = Time.now 
+        @lastApparitionArme = Time.now
       end
     })
-    
-    @intervalleApparitionArme = 3
-    @lastApparitionArme = Time.now 
+
 
     newEntite(EntiteList::BLANCHON, 540, 920)
     @game.player=(@@entities["Blanchon"][1])
 
     newEntite(EntiteList::CERET, 4020, 1000)
-   
 
     @game.show()
 
@@ -53,7 +60,7 @@ class Terrain
 
   def armeModelUpdate(action, mArme)
     vArme = @@armesAuSol[mArme.name][1]
-    
+
     case action
     when Action::WEAPON_BROKE
     when Action::ENTITY_MOVED
@@ -121,10 +128,16 @@ class Terrain
     newArmeName = Terrain.getNewName(arme.name)
 
     map = Hash[newArmeName => [arme, @game.newArme(arme.name(), newArmeName, self)]]
-    @@armesAuSol.merge!(map)
+    Terrain::armesAuSol.merge!(map)
 
-    x = rand(210...3801)
-    y = rand(770...2051)
+    x = rand(210..3800)
+    x1 = rand(210..3800)
+    y = rand(770..2050)
+    y1 = rand(770..2050)
+
+    x = rand(1..2) == 1 ? x : x1
+    y = rand(1..2) == 1 ? y : y1
+    
     arme.deplacer(x, y)
   end
 
