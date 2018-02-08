@@ -1,15 +1,16 @@
 require "em/view/parameter"
 
 class Background
-  def initialize(window, room, player, boss)
-    @player = player
-    @boss = boss
+  def initialize(window, room)
     @window = window
     @pvArrayP = []
     @buffArray = []
     @lifeBar = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPVx20.png", false)
     @life = Gosu::Image.new(window,ASSETPATH+"IHM-PVPleinx20.png", false)
     @Nlife = Gosu::Image.new(window,ASSETPATH+"IHM-PVVidex20.png", false)
+    @cursorPicture = Gosu::Image.new(@window, ASSETPATH+"Curseurx20.png", false)
+
+    #FIXME : add methods changePortraitBoss/Player
     @buffCase = Gosu::Image.new(window,ASSETPATH+"IHM-TableauAmeliorationx20.png", false)
     @portrait = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPortraitx20.png", false)
     case room
@@ -23,7 +24,15 @@ class Background
       @pvArrayB = []
     end
   end
-
+  
+  def setPlayer(player)
+    @player = player
+  end
+  
+  def setBoss(boss)
+    @boss = boss
+  end
+  
   def setPvP(vie, vieMax)
     @pvArrayP.clear()
     if vie < vieMax
@@ -39,7 +48,7 @@ class Background
       end
     end
   end
-  
+
   def setPvB(vie, vieMax)
     @pvArrayB.clear()
     if vie < vieMax
@@ -56,56 +65,51 @@ class Background
     end
   end
   
-#  def addBuff(nom)
-#    picture = Gosu::Image.new(window,ASSETPATH+"#{nom}Buffx20", false)
-#    @buffArray.merge({nom, picture})
-#  end
   def addBuff(name)
     picture = Gosu::Image.new(@window,ASSETPATH+"#{name}Buffx20.png", false)
     @buffArray.push(picture)
   end
-  
+
   def removeBuff(pos)
     @buffArray.delete_at(pos)
   end
-  
+
   def draw
+    @cursorPicture.draw(@window.getCursorPos()[0]-40,@window.getCursorPos()[1]-40,99, 0.2, 0.2)
     @wall.draw 0,0,0
+    #FIXME : add methods portrait
     @portrait.draw 40,40, 0
     @portrait.draw 4200, 40, 0
-    if @pvArrayP.count(1) == 0
-      @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@player.name}Fullx20.png", false)
-    elsif @pvArrayP.count(1) >= @pvArrayP.length-1  
-      @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@player.name}Lowx20.png", false)
-    else
-      @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@player.name}Normalx20.png", false)
-#    elsif @pvArrayP.count(1) == @pvArrayP.length()
+    if @player
+      if @pvArrayP.count(1) == 0
+        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@player.name}Fullx20.png", false)
+      elsif @pvArrayP.count(1) >= @pvArrayP.length-1
+        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@player.name}Lowx20.png", false)
+      else
+        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@player.name}Normalx20.png", false)
+        #    elsif @pvArrayP.count(1) == @pvArrayP.length()
+      end
+      @Ppicture.draw 60,40,2
     end
-    @Ppicture.draw 60,40,2
-    
-    
-    
-    
-    if @pvArrayB.count(1) == 0
-      @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Fullx20.png", false)
-    elsif @pvArrayB.count(1) >= @pvArrayB.length-1 
-      @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Lowx20.png", false)
-    else @pvArrayB.count(1) > 1 and @pvArrayB.count(1) < @pvArrayB.length()
-      @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Normalx20.png", false)
-   #    elsif @pvArrayP.count(1) == @pvArrayP.length()
+
+    if @boss
+#      if @pvArrayB.count(1) == 0
+#        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Fullx20.png", false)
+#      elsif @pvArrayB.count(1) >= @pvArrayB.length-1
+#        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Lowx20.png", false)
+#      else @pvArrayB.count(1) > 1 and @pvArrayB.count(1) < @pvArrayB.length()
+        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Normalx20.png", false)
+        #    elsif @pvArrayP.count(1) == @pvArrayP.length()
+#      end
+      @Ppicture.draw 4760,40,2, -1
     end
-    @Ppicture.draw 4760,40,2, -1
-    
-    
-    
-    
-    
+
     #life and buff player
     @lifeBar.draw 620,40,1
     x = 540
     for i in 0 .. @pvArrayP.length-1
       x += 140
-      if @pvArrayP[i] == 0     
+      if @pvArrayP[i] == 0
         @life.draw x,100,2
       else
         @Nlife.draw x,100,2

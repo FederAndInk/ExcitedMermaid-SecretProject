@@ -1,55 +1,55 @@
 require 'gosu'
+require 'observer'
 require 'em/view/teacher'
 require 'em/view/background'
 
 class Game < Gosu::Window
+  include(Observable)
   def initialize()
     super 4800,2660, false
     fullscreen=($fullsc)
     @mus = $music
     @vol = $volume
-
-    @player = Teacher.new self,"Blanchon", "player"
-    @boss = Teacher.new(self,"Blanchon","boss")
-    @boss2 = Teacher.new(self,"Blanchon","boss")
-    @backdrop = Background.new self, "classroom", @player, @boss
-
-    @player.move_To(1500,1200)
-    @boss.move_To(3500,1200)
-    @boss2.move_To(3700,1500)
+    @toDraw = []
+    @background =  Background.new(self, "classroom")
+    @toDraw << @background
 
     @keys = Array.new()
-    @backdrop.setPvP(5,5)
-    @backdrop.addBuff("staline")
-    @backdrop.addBuff("perso_face_32")
-    @backdrop.addBuff("staline")
-    @backdrop.removeBuff(2)
-    
-    @backdrop.setPvB(3,5)
+
   end
-  
+
+  def newTeacher(name, nameId, observer, isPrio = false)
+    @toDraw << Teacher.new(self, name, nameId, isPrio)
+    @toDraw.last().add_observer(observer, :entityViewUpdate)
+    return @toDraw.last()
+  end
 
   def draw
     puts($fullsc)
     puts(fullscreen?())
-    @player.setPrio(@player.posy())
-    @boss.setPrio(@boss.posy())
-    @boss2.setPrio(@boss2.posy())
-    @backdrop.draw
-    @player.draw
-    @boss.draw()
-    @boss2.draw()
+    @toDraw.each(){ |drawable|
+      drawable.draw
+      if drawable.class.method_defined?("setPrio")
+        drawable.setPrio()
+      end
+    }
   end
-
+  
+  def deleteEntity(entity)
+    @toDraw.delete(entity)
+  end
+  
   def button_down(key)
     k = button_id_to_char(key)
     if ["z","q","s","d"].include?(k)
       @keys.push(k)
     end
-    if key == Gosu::MS_LEFT
-      @player.setAttack("Estoc")
-    elsif key == Gosu::MS_RIGHT
-      @player.setAttack("Bas")
+    if key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE
+#      @player.setAttack("Estoc")
+       notify_observers(key, self)
+#    elsif key == Gosu::MS_RIGHT
+#      @player.setAttack("Bas")
+#       notify_observers(key, self)
     end
   end
 
@@ -60,6 +60,19 @@ class Game < Gosu::Window
     end
   end
 
+  def player=(player)
+    @player = player
+    @background.setPlayer(player)
+  end
+
+  def boss=(boss)
+    @background.setBoss(boss)
+  end
+  
+  def getCursorPos()
+    return [mouse_x, mouse_y]
+  end
+  
   def update
     case @keys.last()
     when 'z'
@@ -80,12 +93,12 @@ class Game < Gosu::Window
     else
       @player.setIdle
     end
-#    if button_down?(Gosu::MS_LEFT)
-#      @player.setAttack("Estoc")
-#    else 
-#      @player.setAttack("meh")
-#    end
+#        if button_down?(Gosu::MS_LEFT)
+    #      @player.setAttack("Estoc")
+    #    else
+    #      @player.setAttack("meh")
+          
+#        end
   end
 end
 
-#Game.new.show
