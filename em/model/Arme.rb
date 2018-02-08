@@ -1,8 +1,8 @@
 require("observer")
 require("em/model/Actions")
-require("em/model/ElementGraphique")
+require("em/model/Entite")
 
-class Arme < ElementGraphique
+class Arme < Entite
   include(Observable)
   #
   # Accessor Methods
@@ -19,7 +19,7 @@ class Arme < ElementGraphique
   #
   # * _effects_ array
   def initialize(name, durabilite, durabiliteMax, projectiles)
-    super(name)
+    super(name, 1, 200, 200, 450, 450)
     
     @durabilite = durabilite
     @durabiliteMax = durabiliteMax
