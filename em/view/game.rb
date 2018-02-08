@@ -3,9 +3,11 @@ require 'em/view/teacher'
 require 'em/view/background'
 
 class Game < Gosu::Window
-  def initialize
+  def initialize()
     super 4800,2660, false
-    
+    fullscreen=($fullsc)
+    @mus = $music
+    @vol = $volume
 
     @player = Teacher.new self,"Blanchon", "player"
     @boss = Teacher.new(self,"Blanchon","boss")
@@ -28,6 +30,8 @@ class Game < Gosu::Window
   
 
   def draw
+    puts($fullsc)
+    puts(fullscreen?())
     @player.setPrio(@player.posy())
     @boss.setPrio(@boss.posy())
     @boss2.setPrio(@boss2.posy())

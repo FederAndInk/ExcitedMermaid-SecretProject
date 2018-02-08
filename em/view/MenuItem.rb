@@ -9,13 +9,18 @@ class MenuItem
           @z = z
           @callback = callback
           @active_image = @main_image
-          @textImage = Gosu::Image.from_text(text,50, {:align => :center})
           @text = text
       end
   
       def draw
+          @textImage = Gosu::Image.from_text(@text,50, {:align => :center})
           @active_image.draw(@x, @y, @z, 0.05, 0.05)
           @textImage.draw((@x-@textImage.width/2)+100, @y+25, @z, 1, 1,  0xff_e43b44)
+      end
+      
+      def setText(text)
+        @text = text
+        puts(@text)
       end
   
       def update
@@ -31,6 +36,8 @@ class MenuItem
               @x = @original_x
               @y = @original_y
           end
+#          puts(@text)
+#          draw
       end
   
       def is_mouse_hovering
@@ -38,13 +45,15 @@ class MenuItem
           my = @window.mouse_y
   
           (mx >= @x and my >= @y) and (mx <= @x + @active_image.width*0.05) and (my <= @y + @active_image.height*0.05)
+#          puts("a = "+"#{@x}")
+#          puts("b = "+"#{@x + @active_image.width*0.05}")
+#          puts("c = "+"#{@y}")
+#          puts("d = "+"#{@y + @active_image.height*0.05}")
       end
   
       def clicked
           if is_mouse_hovering then
               @callback.call
           end
-          puts(@text)
-          puts(@textImage.width/2)
       end
 end

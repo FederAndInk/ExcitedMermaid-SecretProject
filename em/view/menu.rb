@@ -9,12 +9,24 @@ class Menu
           @items << item
           self
       end
+      
+      def clean
+        @items.clear()
+      end
   
       def draw
           @items.each do |i|
               i.draw
           end
       end
+      
+      def setText(text)
+        @items[0].setText(text)
+      end
+      
+       def isEmpty
+         return @items.empty?()
+       end
   
       def update
           @items.each do |i|
