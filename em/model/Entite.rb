@@ -11,10 +11,12 @@ class Entite < ElementGraphique
   #
   # Accessor Methods
   #
-  attr_accessor :vie, :position, :hitbox
+  attr_accessor :vie, :position, :hitbox , :effetsSubis
   attr_reader :vie_max
   def initialize(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y)
     super(name)
+    
+    @effetsSubis= Array.new
     
     @position = Hash.new(0)
     deplacer(0, 0)
@@ -26,6 +28,25 @@ class Entite < ElementGraphique
     @vie_max = vie_max
     @vie = @vie_max
   end
+  
+  
+  def addEffet(effet)
+    if(effet.class.name == "Effet" && !subitEffet?(effet.name))
+      @effetsSubis.push(Effect.getEffect(effet.name))
+    end
+  end
+  
+  def subitEffet?(nomEffet)
+    answser = false
+    effetsSubis.each { 
+              |effet|
+              if(effet.class.name == "Effect" && effet.name == nomEffet)
+               answer = true
+              end
+            }
+            
+    return answer
+  end
 
   def soigner(montantSoin)
     @vie += montantSoin
@@ -34,9 +55,14 @@ class Entite < ElementGraphique
     end
   end
 
-  def perdreVie(degatsSubis,entiteAttaquante)
+  def perdreVie(degatsSubis,entiteAttaquante, effets)
     @vie -= degatsSubis
     puts self.name + " perd " + degatsSubis.to_s + "HP! (" + @vie.to_s + "HP restants)"
+    if(!effets.empty?)
+      changed()
+      notify_observers(Action::SUBIT_EFFETS, self, effets)
+    end
+    
     if @vie <=0
       changed()
       notify_observers(Action::ENTITY_DIED, self, entiteAttaquante)
@@ -44,10 +70,30 @@ class Entite < ElementGraphique
   end
 
   def deplacer(x,y)
-    @position["x"] = x
-    @position["y"] = y
-    changed()
-    notify_observers(Action::ENTITY_MOVED, self, self)
+    
+    deplaX = x - @position["x"]
+    deplaY = y - @position["y"]
+    malusX = 0
+    malusY = 0
+    bonusX = 0
+    bonusY = 0
+    
+    if(subitEffet?(Effet.SLOW.name))
+      malusX = deplaX *0.2
+      malusY = deplaY *0.2
+    end  
+    if(subitEffet?(Effet.SPEED.name))
+      bonusX = deplaX *0.2
+      bonusY = deplaY *0.2
+    end
+    
+    
+    if(!subitEffet?(Effet.ROOT.name))
+      @position["x"] += deplaX -malusX +bonusX
+      @position["y"] += deplaY -malusY +bonusY
+      changed()
+      notify_observers(Action::ENTITY_MOVED, self, self)
+    end
   end
 
   def getHitboxRel

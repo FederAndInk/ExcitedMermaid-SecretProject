@@ -3,7 +3,7 @@
 #
 require 'em/model/Entite'
 
-class Ennemi < Entite
+class Ennemi < EntiteAttaquante
 
   #
   # Accessor Methods

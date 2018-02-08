@@ -2,7 +2,7 @@
 # 
 #
 
-class Boss < Entite
+class Boss < EntiteAttaquante
 
   #
   # Accessor Methods
