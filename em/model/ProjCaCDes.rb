@@ -23,7 +23,7 @@ class ProjCaCDes < Projectile
 
   def hit(entity)
     alreadyHitEntity.push(entity.name)
-    entity.perdreVie(degats,self)
+    entity.perdreVie(degats,self,@effets)
   end
 
   def deplacement

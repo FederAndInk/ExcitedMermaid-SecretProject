@@ -13,7 +13,7 @@ class ProjDistZigZag < Projectile
   
   def hit(entity)
     self.perdreVie(vie_max,entity)
-    entity.perdreVie(degats,self)
+    entity.perdreVie(degats,self,@effets)
   end
   
   def deplacement

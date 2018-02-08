@@ -10,17 +10,18 @@ class Projectile < Entite
   #
   # Accessor Methods
   #
-  attr_accessor :name, :degats, :departAbs, :portee, :direction, :entitySrc
+  attr_accessor :name, :degats, :departAbs, :portee, :direction, :entitySrc, :effets
 
   public
   def self.projectilesActifs
     @@projectilesActifs
   end
 
-  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y,effets)
     @portee = portee
     super(name, 1, posHb1_x, posHb1_y, posHb2_x, posHb2_y)
     @departAbs = Array.new
+    @effets = effets
   end
 
   #
@@ -40,7 +41,7 @@ class Projectile < Entite
         }
     self.checkPortee
     self.deplacement
-end
+  end
 
   #
   #
