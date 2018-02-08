@@ -21,7 +21,6 @@ class MenuItem
           @xMod = x
           @yMod = y
           @textImage = Gosu::Image.from_text(@text,50, {:align => :center})
-            puts"text = #{(@x-@textImage.width/2)+100}"
           @active_image.draw(@x, @y, @z, @xMod, @yMod)
           if @options
             @textImage.draw((@x-@textImage.width/2)+200, @y+75, @z, 1, 1,  0xff_e43b44)

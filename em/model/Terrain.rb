@@ -40,11 +40,11 @@ class Terrain
     @threadIHM = Thread.new do
 #        @@entities["Ceret"][1].moveLeft()
 #        @@entities["Ceret"][1].setmoving()
-      @@entities["Blanchon"][1].setWeapon("Chaise", WEAPONTYPE::MELEE)
+      @@entities["Blanchon"][1].setWeapon("Regle", WEAPONTYPE::MELEE)
       sleep(2)
       @@entities["Blanchon"][1].setHited()
       sleep(2)
-      @game.gameOver
+      @@entities["Blanchon"][1].setAttack("estoc")
       
         
     while true
