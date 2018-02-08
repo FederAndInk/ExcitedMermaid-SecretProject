@@ -1,6 +1,8 @@
 require "em/view/parameter"
 require("observer")
 require("em/model/weaponType")
+require("em/view/MenuItem")
+
 
 class Teacher
   include(Observable)

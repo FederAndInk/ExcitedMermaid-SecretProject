@@ -43,6 +43,9 @@ class Terrain
       @@entities["Blanchon"][1].setWeapon("Agrafeuse", WEAPONTYPE::RANGED)
       sleep(2)
       @@entities["Blanchon"][1].setHited()
+      sleep(2)
+      @game.gameOver
+      
         
     while true
       puts "ee"
