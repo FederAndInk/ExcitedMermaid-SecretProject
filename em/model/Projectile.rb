@@ -10,15 +10,17 @@ class Projectile < Entite
   #
   # Accessor Methods
   #
-  attr_accessor :name, :direction, :entitySrc
+  attr_accessor :name, :degats, :departAbs, :portee, :direction, :entitySrc
 
   public
   def self.projectilesActifs
     @@projectilesActifs
   end
 
-  def initialize(name,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+  def initialize(name,portee,posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+    @portee = portee
     super(name, 1, posHb1_x, posHb1_y, posHb2_x, posHb2_y)
+    @departAbs = Array.new
   end
 
   #
@@ -28,18 +30,30 @@ class Projectile < Entite
   # si la fin du projectile alors il est détruit
   # * _entites_ array
   def nextStep(entites)
-  end
+    puts self.name + " en vie à la position (" + self.position["x"].to_s + "," + self.position["y"].to_s+")? : " + (self.vie <=0 ? "No" : "Yes")
+
+    entites.each { 
+          |entity|
+          if(isHit(entity))
+           hit(entity)
+          end
+        }
+    self.checkPortee
+    self.deplacement
+end
 
   #
   #
   # * _departAbs_ array
   # * _direction_ Integer
-  def copyAndActive(name,departAbs, direction, entitySrc)
+  def copyAndActive(name,degats,departAbs, direction, entitySrc)
     newCopy = deep_clone()
 
     puts entitySrc.class
     if entitySrc.is_a?(Entite)
       newCopy.name= name
+      newCopy.degats = degats
+      newCopy.departAbs = departAbs
       newCopy.deplacer(departAbs[0],departAbs[1])
       newCopy.entitySrc= entitySrc
       newCopy.direction= direction
@@ -57,8 +71,15 @@ class Projectile < Entite
 
     if(isHitable(entite) && isCollidedTo(entite))
       hit = true
+      puts self.name + " touche " + entite.name
     end
     return hit
+  end
+  
+  def hit(entity)
+  end
+  
+  def deplacement
   end
 
   def isHitable(entite)
@@ -77,9 +98,17 @@ class Projectile < Entite
   def deep_clone
     newClone = clone
     newClone.position = @position.clone
+    newClone.hitbox = @hitbox
+    
     return newClone
   end
-
+  
+  def checkPortee
+    if((@direction[0] >= 0 && @position["x"] >= (@departAbs[0] + @portee)) || (@direction[0] <= 0 && @position["x"] <= (@departAbs[0] - @portee)))
+      changed()
+      notify_observers(Action::ENTITY_DIED, self, self)
+    end
+  end  
   protected
 
   #

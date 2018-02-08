@@ -36,6 +36,7 @@ class Entite < ElementGraphique
 
   def perdreVie(degatsSubis,entiteAttaquante)
     @vie -= degatsSubis
+    puts self.name + " perd " + degatsSubis.to_s + "HP! (" + @vie.to_s + "HP restants)"
     if @vie <=0
       changed()
       notify_observers(Action::ENTITY_DIED, self, entiteAttaquante)
@@ -46,7 +47,7 @@ class Entite < ElementGraphique
     @position["x"] = x
     @position["y"] = y
     changed()
-    notify_observers(Action::ENTITY_MOVED, self)
+    notify_observers(Action::ENTITY_MOVED, self, self)
   end
 
   def getHitboxRel

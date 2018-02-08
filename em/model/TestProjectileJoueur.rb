@@ -3,7 +3,10 @@ require("em/model/Personnage")
 require("em/model/Ennemi")
 require("em/model/Boss")
 require("em/model/Projectile")
-require("em/model/DistBoule")
+require("em/model/ProjDist")
+require("em/model/ProjDistPerf")
+require("em/model/ProjDistZigZag")
+require("em/model/ProjCaCDes")
 
 class Test
   #
@@ -11,7 +14,7 @@ class Test
   #
   def initialize()
     @entities = Hash.new()
-    @proj = DistBoule.new("distBoule",0, 0, 10, 10)
+    @proj = ProjCaCDes.new("projDistPerd",200,0, 0, 4, 10)
 
     perso = newPerso("Blanchon")
     @perso = perso.values[0]
@@ -21,17 +24,19 @@ class Test
     @ennemi = ennemi.values[0]
     @entities.merge!(ennemi)
 
-    distBoule = newProj("DistBoule")
+    distBoule = newProj(ProjDist.name)
     @entities.merge!(distBoule)
-    distBoule = newProj("DistBoule")
+distBoule = newProj(ProjDist.name)
     @entities.merge!(distBoule)
-
+distBoule = newProj(ProjDist.name)
+    @entities.merge!(distBoule)
+    
+    
     while(!Projectile.projectilesActifs.empty?)
- 
       Projectile.projectilesActifs.each {
         |projectile|
-        puts projectile.name + " en vie à la position (" + projectile.position["x"].to_s + "," + projectile.position["y"].to_s+")? : " + (projectile.vie <=0 ? "No" : "Yes")
         projectile.nextStep(@entities.values)
+        puts ""
       }
     end
   end
@@ -55,20 +60,23 @@ class Test
 
   def newPerso(name)
     newName = getNewName(name)
-    perso = Personnage.new(newName, 4, 100, 0, 0, 0, 50, 50)
+    perso = Personnage.new(newName, 4, 0, 0, 50, 50)
+    perso.deplacer(100,0)
     perso.add_observer(self, :entiteUpdate)
     return {newName => perso}
   end
 
   def newProj(name)
     newName = getNewName(name)
-    @proj.copyAndActive(newName,[0,0],[5,0],@ennemi).add_observer(self, :entiteUpdate)
-    return {newName => @proj}
+    proj = @proj.copyAndActive(newName,2,[10,10],[5,2],-1,@ennemi)
+    proj.add_observer(self, :entiteUpdate)
+    return {newName => proj}
   end
 
   def newEnnemi(name)
     newName = getNewName(name)
-    ennemi = Ennemi.new(newName, 4, 50, 0, 0, 0, 50, 50)
+    ennemi = Ennemi.new(newName, 4, 0, 0, 50, 50)
+    ennemi.deplacer(50, 0)
     ennemi.add_observer(self, :entiteUpdate)
     return {newName => ennemi}
   end
@@ -82,6 +90,7 @@ class Test
     i = 1
     while @entities.has_key?(nameTmp)
       nameTmp = name + i.to_s
+      i+=1
     end
     return nameTmp
   end
