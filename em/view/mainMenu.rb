@@ -3,6 +3,7 @@ require 'em/view/menu'
 require 'em/view/MenuItem'
 require 'em/view/parameter'
 require 'em/view/game'
+require("em/model/Terrain")
 
 class MainMenu < Gosu::Window
   def initialize
@@ -37,9 +38,10 @@ class MainMenu < Gosu::Window
                                     else $music = true 
                                     end }, 
                                     lambda { $volume += 0.1 }, lambda{$volume -= 0.1}, lambda{@option.clean()}]
-      actions = Array[lambda { game = Game.new
+      actions = Array[lambda { 
+        game = Game.new
         game.fullscreen=($fullsc) 
-        game.show}, 
+        Terrain.new(game)}, 
           lambda {
         x = self.width()/2 - 100
         y = 50

@@ -27,8 +27,8 @@ class Terrain
   #
   # Accessor Methods
   #
-  def initialize()
-    @game = Game.new()
+  def initialize(game)
+    @game = game
     @game.add_observer(self,:gameUpdate)
 
     newEntite(EntiteList::BLANCHON, 540, 920, true)
