@@ -217,7 +217,7 @@ class Teacher
 
     
     if @state == "dead" or @state == "hited"
-    elsif @weaponType == WEAPONTYPE::RANGED and !(@state == "dead" or @state == "hited")
+    elsif @weaponType == WEAPONTYPE::RANGED and !(@state == "dead" or @state == "hited") 
       pointa = (@arm.width().to_f - (@arm.width().to_f - 273.0)) / @arm.width.to_f
       pointb = (@arm.height().to_f - (@arm.height().to_f - 231.0)) / @arm.height().to_f
 #      if @weapon
@@ -231,7 +231,8 @@ class Teacher
         @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, angle, pointa, pointb, @flip)
         @arm.draw_rot @posx-273, @posy+231,@prio, angle, pointa, pointb, @flip
       end
-    else
+    elsif @weaponPicture
+      @weaponPicture.draw @posx,@posy,@prio, @flip
       @arm.draw @posx, @posy, @prio, @flip, 1
     end
   end

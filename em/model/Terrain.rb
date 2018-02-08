@@ -40,7 +40,7 @@ class Terrain
     @threadIHM = Thread.new do
 #        @@entities["Ceret"][1].moveLeft()
 #        @@entities["Ceret"][1].setmoving()
-      @@entities["Blanchon"][1].setWeapon("Agrafeuse", WEAPONTYPE::RANGED)
+      @@entities["Blanchon"][1].setWeapon("Chaise", WEAPONTYPE::MELEE)
       sleep(2)
       @@entities["Blanchon"][1].setHited()
       sleep(2)
