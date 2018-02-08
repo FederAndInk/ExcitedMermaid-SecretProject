@@ -106,7 +106,7 @@ end
   def checkPortee
     if((@direction[0] >= 0 && @position["x"] >= (@departAbs[0] + @portee)) || (@direction[0] <= 0 && @position["x"] <= (@departAbs[0] - @portee)))
       changed()
-      notify_observers(Action::ENTITY_DIED, self, self)
+      notify_observers(Action::ENTITY_DIED, self)
     end
   end  
   protected

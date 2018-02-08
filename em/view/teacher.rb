@@ -1,5 +1,6 @@
 require "em/view/parameter"
 require("observer")
+require("../model/weaponType")
 
 class Teacher
   include(Observable)
@@ -14,6 +15,7 @@ class Teacher
     @isPrio = isPrio
     #      @image = Gosu::Image.new(window, "assets/Character#{name}x20.png", false)
     @walk = Gosu::Image.load_tiles(ASSETPATH+"Character#{name}Walkingx20.png",640,640)
+   
     @posx = 0
     @posy = 0
     @prio = @posy
@@ -21,6 +23,8 @@ class Teacher
     @image = @walk.first
     @state = "idle"
     @attack
+    @weapon = nil
+    @weaponType
   end
 
   def setPrio(nb = @posy)
@@ -33,6 +37,12 @@ class Teacher
   def moveTo(x,y)
     @posx = x
     @posy = y
+  end
+  
+  def setWeapon(weapon, weaponType)
+    @weapon = weapon
+    @weaponPicture = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
+    @weaponType = weaponType
   end
 
   def getPosition()
@@ -83,8 +93,10 @@ class Teacher
     @i = [Gosu.milliseconds / 125 % @walk.length]
     if @state == "move"
       @image = @walk.at(@i.first())
+      @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
     elsif @state == "idle"
       @image = Gosu::Image.new(@meh, ASSETPATH+"Character#{@name}x20.png", false)
+      @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
     end
 
     #attack handler draw
@@ -105,5 +117,10 @@ class Teacher
       end
     end
     @image.draw @posx, @posy, @prio, @flip
+    if @weaponType == MELEE
+      @arm.draw @posx, @posy, @prio, @flip
+    else
+      @arm.draw_rot @posx, @posy, @prio
+    end
   end
 end

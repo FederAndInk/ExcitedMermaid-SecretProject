@@ -33,11 +33,11 @@ class Terrain
     newEntite(EntiteList::BLANCHON, 540, 920)
     @game.player=(@@entities["Blanchon"][1])
 
-    newEntite(EntiteList::CERET, 4020, 1000)
+#    newEntite(EntiteList::CERET, 4020, 1000)
     @threadIHM = Thread.new do
       while true
-        @@entities["Ceret"][1].moveLeft()
-        @@entities["Ceret"][1].setmoving()
+#        @@entities["Ceret"][1].moveLeft()
+#        @@entities["Ceret"][1].setmoving()
         sleep(0.1)
       end
     end

@@ -1,0 +1,4 @@
+module WEAPONTYPE
+  RANGED
+  MELEE
+end
