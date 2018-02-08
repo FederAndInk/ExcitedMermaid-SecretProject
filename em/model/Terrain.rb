@@ -35,7 +35,7 @@ class Terrain
     @game.player=(@@entities["Blanchon"][1])
 
 #    newEntite(EntiteList::CERET, 4020, 1000)
-    @game.boss=(@@entities["Ceret"][1])
+#    @game.boss=(@@entities["Ceret"][1])
     
     @threadIHM = Thread.new do
 #        @@entities["Ceret"][1].moveLeft()

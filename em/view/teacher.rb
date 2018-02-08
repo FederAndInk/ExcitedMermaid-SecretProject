@@ -1,6 +1,6 @@
 require "em/view/parameter"
 require("observer")
-require("../model/weaponType")
+require("em/model/weaponType")
 
 class Teacher
   include(Observable)
@@ -33,7 +33,7 @@ class Teacher
     @mbegin = 1
     @hittedState = 999
     @weapon = nil
-    @weaponType
+    @weaponType = "RANGED"
   end
 
   def setPrio(nb = @posy)
@@ -125,7 +125,7 @@ class Teacher
     if @state == "move"
       @i = [Gosu.milliseconds / 125 % @walk.length]
       @image = @walk.at(@i.first())
-      @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
+#      @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
     elsif @state == "idle"
       @image = @idle
       @arm = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
@@ -133,7 +133,6 @@ class Teacher
       if @isPrio
         @image = @hitted
       else
-        puts"aaaaaaaaaaah"
         puts(@hittedState)
         colour = 0xff_ff0000
       end
@@ -153,12 +152,20 @@ class Teacher
         @meh.deleteEntity(self)
       end
     end
+    cur = @meh.getCursorPos()
+    ax = cur[0]
+    ay = cur[1]
+    bx = 210
+    by = 393
+    oy = @posx+273
+    ox = @posy+231
+#    angle = Math.atan2(p3y - p1y, p3x - p1x) - atan2(p2y - p1y, p2x, p1x)
+    angle = Math.tan(((ax-ox)*(by-oy)+(ay-oy)*(bx-ox)) / ((ax-ox)*(bx-ox)-(ay-oy)*(by-oy)))**(-1)
 
-    if @weaponType == MELEE
-      @arm.draw @posx, @posy, @prio, @flip
-    else
-      @arm.draw_rot @posx, @posy, @prio
-    end
+#    if @weaponType == MELEE
+#      @arm.draw @posx, @posy, @prio, @flip
+#    else
+#    end
     
     #attack handler draw
     #    if (@attack == "Estoc" or @attack == "Bas")
@@ -178,5 +185,16 @@ class Teacher
     #      end
     #    end
     @image.draw @posx, @posy, @prio, @flip, 1, colour
+    if @weaponType == "RANGED"
+      pointa = (@arm.width() - (@arm.width() - 273)) / @arm.width 
+      pointb = (@arm.height() - (@arm.height() - 231)) / @arm.height()
+      puts(pointa, pointb)
+      @arm.draw_rot @posx, @posy,@flip, angle, pointa, pointb
+      
+    elsif @state == "dead" or @state == "hited" 
+      puts"dead"
+    else
+      @arm.draw @posx, @posy, @prio, @flip, 1
+    end
   end
 end

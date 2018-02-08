@@ -8,6 +8,7 @@ class Background
     @lifeBar = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPVx20.png", false)
     @life = Gosu::Image.new(window,ASSETPATH+"IHM-PVPleinx20.png", false)
     @Nlife = Gosu::Image.new(window,ASSETPATH+"IHM-PVVidex20.png", false)
+    @cursorPicture = Gosu::Image.new(@window, ASSETPATH+"Curseurx20.png", false)
 
     #FIXME : add methods changePortraitBoss/Player
     @buffCase = Gosu::Image.new(window,ASSETPATH+"IHM-TableauAmeliorationx20.png", false)
@@ -77,6 +78,7 @@ class Background
   end
 
   def draw
+    @cursorPicture.draw(@window.getCursorPos()[0]-20,@window.getCursorPos()[1]-20,99, 0.2, 0.2)
     @wall.draw 0,0,0
     #FIXME : add methods portrait
     @portrait.draw 40,40, 0

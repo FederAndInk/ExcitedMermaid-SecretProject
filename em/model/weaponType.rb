@@ -1,4 +1,4 @@
 module WEAPONTYPE
-  RANGED
-  MELEE
+  RANGED = "RANGED"
+  MELEE = "MELEE"
 end
