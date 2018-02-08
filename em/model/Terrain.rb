@@ -2,6 +2,7 @@ require("em/model/Entite")
 require("em/model/Personnage")
 require("em/model/Ennemi")
 require("em/model/Boss")
+require("em/model/Projectile")
 require("em/view/game")
 require 'em/model/Personnage'
 require 'em/model/Ennemi'
@@ -19,8 +20,8 @@ class Terrain
 end
 
 module EntiteList
-  BLANCHON = {:name => "Blanchon", :entite => Personnage.new(Terrain.getNewName("Blanchon"), 4, 0, 0, 0, 0)}
-  CERET = {:name => "Ceret", :entite => Personnage.new(Terrain.getNewName("Ceret"), 4, 0, 0, 0, 0)}
+  BLANCHON = {:name => "Blanchon", :entite => Personnage.new("Blanchon", 4, 0, 0, 0, 0)}
+  CERET = {:name => "Ceret", :entite => Boss.new("Ceret", 4, 0, 0, 0, 0)}
 end
 
 class Terrain
@@ -36,9 +37,16 @@ class Terrain
     newEntite(EntiteList::CERET, 4020, 1000)
     @threadIHM = Thread.new do
       while true
-        @@entities["Ceret"][1].moveLeft()
-        @@entities["Ceret"][1].setmoving()
-        sleep(0.1)
+        ents = getEntitiesModel()
+        for proj in Projectile::projectilesActifs
+          proj.nextStep(ents)
+          if isOut(proj)
+            puts "delete projectile " + proj.name()
+            vProj = @@entities[proj.name][1]
+            vProj.
+            Projectile::projectilesActifs.delete(proj)
+          end
+        end
       end
     end
 
@@ -46,13 +54,13 @@ class Terrain
 
   end
 
-  def entiteModelUpdate(action, mEntite)
+  def entiteModelUpdate(action, mEntite, content = nil)
     vEntite = @@entities[mEntite.name][1]
 
     case action
     when Action::ENTITY_DIED
       puts ("entity : " + mEntite.name + " died")
-      #      vEntite
+#            vEntite.
     when Action::WEAPON_BROKE
 
     when Action::ENTITY_MOVED
@@ -78,6 +86,7 @@ class Terrain
 
   def newEntite(perso, x, y)
     entite = perso[:entite].clone
+    entite.name=(Terrain.getNewName(perso[:entite].name()))
     entite.add_observer(self, :entiteModelUpdate)
 
     map = Hash[entite.name() => [entite, @game.newTeacher(perso[:name], entite.name(), self)]]
@@ -86,4 +95,18 @@ class Terrain
     entite.deplacer(x, y)
   end
 
+  def getEntitiesModel
+    ret = []
+    for ent in @@entities
+      ret << ent[0]
+    end
+    return ret
+  end
+  
+  def isOut(entite)
+    x = entite.position["x"]
+    y = entite.position["y"]
+    return x < 0 or y < 0 or x > @game.width() or y > @game.height()
+  end
+  
 end
