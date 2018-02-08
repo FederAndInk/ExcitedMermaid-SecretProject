@@ -49,8 +49,9 @@ class Teacher
   end
 
   def setWeapon(weapon, weaponType)
+    puts"weapon"
     @weapon = weapon
-    @weaponPicture = Gosu::Image.new(@meh, ASSETPATH+"arm#{@name}x20.png", false)
+    @weaponPicture = Gosu::Image.new(@meh, ASSETPATH+"#{weapon}x20.png", false)
     @weaponType = weaponType
   end
 
@@ -176,12 +177,10 @@ class Teacher
 #    if(angle < 0)
 #      angle = 180 + angle;
 #    end
-    a = (by-oy ) / ((bx-ox)*1000000000000**1000000000)
+    a = (by-oy ) / ((bx-ox)*1000000000000**100)
     b = oy-a*ox
     y = a*ax+b
     if (y > ay)
-      puts("y = "+"#{y}")
-      puts(cur[1])
       angle = angle + 180
     end
     #    if angle < 0
@@ -209,16 +208,25 @@ class Teacher
     #        setAttack()
     #      end
     #    end
+#      puts(@weaponType)
+    
+    # entite draw
     @image.draw @posx, @posy, @prio, @flip, 1, colour
+
+    
     if @state == "dead" or @state == "hited"
-      puts"non"
-    elsif @weaponType == "RANGED" and !(@state == "dead" or @state == "hited")
+    elsif @weaponType == WEAPONTYPE::RANGED and !(@state == "dead" or @state == "hited")
       pointa = (@arm.width().to_f - (@arm.width().to_f - 273.0)) / @arm.width.to_f
       pointb = (@arm.height().to_f - (@arm.height().to_f - 231.0)) / @arm.height().to_f
+#      if @weapon
+#        @weaponPicture.draw_rot(@posx, @posy,@prio, angle, pointa, pointb, @flip)
+#      end
 #      puts(angle)
       if @flip == 1
+        @weaponPicture.draw_rot(@posx+273, @posy+231,@prio, angle, pointa, pointb, @flip)
         @arm.draw_rot @posx+273, @posy+231,@prio, angle, pointa, pointb, @flip
       else
+        @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, angle, pointa, pointb, @flip)
         @arm.draw_rot @posx-273, @posy+231,@prio, angle, pointa, pointb, @flip
       end
     else
