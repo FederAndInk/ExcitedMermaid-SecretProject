@@ -28,7 +28,7 @@ class Terrain
 end
 
 module EntiteList
-  BLANCHON = {:name => "Blanchon", :entite => Personnage.new("Blanchon", 4, 0, 0, 0, 0, 0)}
+  BLANCHON = {:name => "Blanchon", :entite => Personnage.new("Blanchon", 4, 200, 200, 400, 400, 0)}
   CERET = {:name => "Ceret", :entite => Boss.new("Ceret", 4, 0, 0, 0, 0, 0)}
 end
 
@@ -43,6 +43,17 @@ class Terrain
     @lastApparitionArme = Time.now
 
     @game = Game.new()
+
+    newEntite(EntiteList::BLANCHON, 540, 920, true)
+    @game.player=(@@entities["Blanchon"][1])
+    @player = @@entities["Blanchon"][0]
+    @game.setPvP(@player.vie, @player.vie_max)
+
+    newEntite(EntiteList::CERET, 4020, 1000)
+    @game.boss=(@@entities["Ceret"][1])
+    @boss = @@entities["Ceret"][0]
+    @game.setPvB(@boss.vie, @boss.vie_max)
+
     @game.setFunction(lambda{
       # Arme distri loop
       if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@nbArmes < 3))
@@ -63,17 +74,17 @@ class Terrain
           Projectile::projectilesActifs.delete(proj)
         end
       end
+
+      # ramasse arme loop
+      if(!@player.arme())
+        @@armesAuSol.each_value do |arme|
+          @player.ramasserArme(arme[0])
+        end
+        if(@player.arme())
+          @@armesAuSol[@player.arme().name()][1].delete()
+        end
+      end
     })
-
-    newEntite(EntiteList::BLANCHON, 540, 920, true)
-    @game.player=(@@entities["Blanchon"][1])
-    @player = @@entities["Blanchon"][0]
-    @game.setPvP(@player.vie, @player.vie_max)
-
-    newEntite(EntiteList::CERET, 4020, 1000)
-    @game.boss=(@@entities["Ceret"][1])
-    @boss = @@entities["Ceret"][0]
-    @game.setPvB(@boss.vie, @boss.vie_max)
 
     @game.show()
   end

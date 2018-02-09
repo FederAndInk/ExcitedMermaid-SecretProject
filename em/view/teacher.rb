@@ -122,6 +122,10 @@ class Teacher
     @state = "dead"
     @mbegin = [Gosu.milliseconds / 120].first()
   end
+  
+  def delete()
+    @meh.deleteEntity(self)
+  end
 
   def setHit()
     @hittedState = 0
@@ -160,7 +164,7 @@ class Teacher
         @image = @die.at(@m)
         @idle.draw(@posx, @posy, @prio, @flip)
       else
-        @meh.deleteEntity(self)
+        delete()
       end
     end
     #    bx = @posx + 211

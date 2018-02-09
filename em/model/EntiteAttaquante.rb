@@ -1,6 +1,8 @@
 require 'em/model/Entite'
 
 class EntiteAttaquante < Entite
+  attr_reader(:arme)
+  
   def initialize(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y, posArme, arme = nil)
       super(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y)
       @arme = arme
@@ -14,7 +16,7 @@ class EntiteAttaquante < Entite
   end
   
   def ramasserArme(arme)
-    if(entity.class.name = "Arme" && @arme == nil && self.isCollidedTo(arme))
+    if(arme.class.name == "Arme" && @arme == nil && self.isCollidedTo(arme))
       @arme = arme
     end
   end
