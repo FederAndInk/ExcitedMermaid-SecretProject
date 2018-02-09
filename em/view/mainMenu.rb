@@ -92,5 +92,4 @@ class MainMenu < Gosu::Window
   end
 end
 
-MainMenu.new.show
 
