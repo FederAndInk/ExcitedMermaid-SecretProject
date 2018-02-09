@@ -2,9 +2,10 @@
 #
 #
 require 'em/model/Entite'
+require 'observer'
 
 class Projectile < Entite
-
+  include(Observable)
   @@projectilesActifs = Array.new
 
   #
@@ -59,7 +60,8 @@ end
       newCopy.direction= direction
 
       @@projectilesActifs.push(newCopy)
-
+#      changed()
+#      notify_observers(Action::ADD_PROJECTILE, newCopy)
     else
       puts "c'est pas une entite!"
     end

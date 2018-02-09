@@ -3,5 +3,6 @@ module Action
   WEAPON_BROKE = 1
   ENTITY_MOVED = 2
   USER_KEY = 3
+  ENTITY_HIT = 10
   
 end

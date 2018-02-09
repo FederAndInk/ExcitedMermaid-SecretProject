@@ -9,7 +9,6 @@ class Background
     @life = Gosu::Image.new(window,ASSETPATH+"IHM-PVPleinx20.png", false)
     @Nlife = Gosu::Image.new(window,ASSETPATH+"IHM-PVVidex20.png", false)
 
-    #FIXME : add methods changePortraitBoss/Player
     @buffCase = Gosu::Image.new(window,ASSETPATH+"IHM-TableauAmeliorationx20.png", false)
     @portrait = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPortraitx20.png", false)
     case room
@@ -78,7 +77,6 @@ class Background
 
   def draw
     @wall.draw 0,0,0
-    #FIXME : add methods portrait
     @portrait.draw 40,40, 0
     @portrait.draw 4200, 40, 0
     if @player

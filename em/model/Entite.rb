@@ -15,7 +15,7 @@ class Entite < ElementGraphique
   attr_reader :vie_max
   def initialize(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y)
     super(name)
-    
+
     @position = Hash.new(0)
     deplacer(0, 0)
 
@@ -37,6 +37,9 @@ class Entite < ElementGraphique
   def perdreVie(degatsSubis,entiteAttaquante)
     @vie -= degatsSubis
     puts self.name + " perd " + degatsSubis.to_s + "HP! (" + @vie.to_s + "HP restants)"
+    @vie = @vie <=  0 ? 0 : @vie
+    changed()
+    notify_observers(Action::ENTITY_HIT, self)
     if @vie <=0
       changed()
       notify_observers(Action::ENTITY_DIED, self)

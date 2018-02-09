@@ -5,6 +5,7 @@ require 'em/view/background'
 
 class Game < Gosu::Window
   include(Observable)
+  attr_reader(:player)
   def initialize
     super 4800,2660, false
 
@@ -30,22 +31,23 @@ class Game < Gosu::Window
       end
     }
   end
-  
+
   def deleteEntity(entity)
     @toDraw.delete(entity)
   end
-  
+
   def button_down(key)
     k = button_id_to_char(key)
     if ["z","q","s","d"].include?(k)
       @keys.push(k)
     end
     if key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE
-#      @player.setAttack("Estoc")
-       notify_observers(key, self)
-#    elsif key == Gosu::MS_RIGHT
-#      @player.setAttack("Bas")
-#       notify_observers(key, self)
+      #      @player.setAttack("Estoc")
+      changed()
+      notify_observers(Action::USER_KEY, key)
+      #    elsif key == Gosu::MS_RIGHT
+      #      @player.setAttack("Bas")
+      #       notify_observers(key, self)
     end
   end
 
@@ -64,11 +66,11 @@ class Game < Gosu::Window
   def boss=(boss)
     @background.setBoss(boss)
   end
-  
+
   def getCursorPos()
     return [mouse_x, mouse_y]
   end
-  
+
   def update
     case @keys.last()
     when 'z'
@@ -89,12 +91,28 @@ class Game < Gosu::Window
     else
       @player.setIdle
     end
-#        if button_down?(Gosu::MS_LEFT)
+    #        if button_down?(Gosu::MS_LEFT)
     #      @player.setAttack("Estoc")
     #    else
     #      @player.setAttack("meh")
-          
-#        end
+
+    #        end
+  end
+
+  def setPvP(vie, vieMax)
+    @background.setPvP(vie,vieMax)
+  end
+
+  def setPvB(vie, vieMax)
+    @background.setPvB(vie,vieMax)
+  end
+
+  def addBuff(name)
+    @background.addBuff(name)
+  end
+
+  def removeBuff(pos)
+    @background.removeBuff(pos)
   end
 end
 

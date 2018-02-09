@@ -1,6 +1,11 @@
 require "em/view/parameter"
 require("observer")
 
+module Attaque
+  ESTOC = "Estoc"
+  BAS = "Bas"
+end
+
 class Teacher
   include(Observable)
   attr_reader :name, :nameId, :posy, :prio, :flip
@@ -66,11 +71,11 @@ class Teacher
   def setAttack(type = "rien")
     #      puts "#{@attack}"
     @attack = type
-    #    @mBegin = [Gosu.milliseconds / ATTACKSPEED].first()
+    @attackBegin = [Gosu.milliseconds / ATTACKSPEED].first()
   end
 
   def moveLeft
-    if @state != "hited"
+    if @state != "hit"
       @posx -= SPEED if ((@posx - SPEED) > 640-150)
       if @flip == 1
         @posx +=640
@@ -80,7 +85,7 @@ class Teacher
   end
 
   def moveRight
-    if @state != "hited"
+    if @state != "hit"
       @posx += SPEED if ((@posx - SPEED) < 4800-480)
       if @flip == -1
         @posx -=640
@@ -90,25 +95,25 @@ class Teacher
   end
 
   def moveUp
-    if @state != "hited"
+    if @state != "hit"
       @posy -= SPEED  if ((@posy - SPEED) > 100)
     end
   end
 
   def moveDown
-    if @state != "hited"
+    if @state != "hit"
       @posy += SPEED if ((@posy - SPEED) < 2200-640)
     end
   end
 
   def setDead()
     @state = "dead"
-    @mbegin = [Gosu.milliseconds / 150].first()
+    @mbegin = [Gosu.milliseconds / 120].first()
   end
 
-  def setHited()
+  def setHit()
     @hittedState = 0
-    @state = "hited"
+    @state = "hit"
   end
 
   def draw
@@ -118,7 +123,7 @@ class Teacher
       @image = @walk.at(@i.first())
     elsif @state == "idle"
       @image = @idle
-    elsif @state == "hited"
+    elsif @state == "hit"
       if @isPrio
         @image = @hitted
       else
@@ -144,22 +149,22 @@ class Teacher
     end
 
     #attack handler draw
-    #    if (@attack == "Estoc" or @attack == "Bas")
-    #      #        @image = @walk.at(@i.first())
-    #      @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attack}x20.png",640,640)
-    #      @m = [Gosu.milliseconds / ATTACKSPEED].first() - @mBegin
-    #      @attackPicture = @mele.at(@m)
-    #      if @attackPicture # test si on sort pas du vecteur
-    #        if @flip == -1
-    #          @attackPicture.draw @posx-220, @posy, @prio, @flip
-    #        else
-    #          @attackPicture.draw @posx+220, @posy, @prio, @flip
-    #        end
-    #      end
-    #      if (@m >= @mele.length()-1)
-    #        setAttack()
-    #      end
-    #    end
+    if (@attack == Attaque::ESTOC or @attack == Attaque::BAS)
+      #        @image = @walk.at(@i.first())
+      @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attack}x20.png",640,640)
+      @m = [Gosu.milliseconds / ATTACKSPEED].first() - @attackBegin
+      @attackPicture = @mele.at(@m)
+      if @attackPicture # test si on sort pas du vecteur
+        if @flip == -1
+          @attackPicture.draw @posx-220, @posy, @prio, @flip
+        else
+          @attackPicture.draw @posx+220, @posy, @prio, @flip
+        end
+      end
+      if (@m >= @mele.length()-1)
+        setAttack()
+      end
+    end
     @image.draw @posx, @posy, @prio, @flip, 1, colour
   end
 end
