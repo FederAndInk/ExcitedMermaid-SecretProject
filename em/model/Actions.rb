@@ -5,5 +5,6 @@ module Action
   USER_KEY = 3
   GAMEOVER = 4
   SUBIT_EFFETS = 5
+  ADD_PROJECTILES = 6
   ENTITY_HIT = 10
 end

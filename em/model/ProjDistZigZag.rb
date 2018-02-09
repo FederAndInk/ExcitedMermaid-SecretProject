@@ -24,7 +24,7 @@ class ProjDistZigZag < Projectile
   end
   
 def copyAndActive(name,degats,departAbs, direction, entitySrc)
-    newCopy = deep_clone()
+    newCopy = super(name,degats,departAbs, direction, entitySrc)
 
     puts entitySrc.class
     if entitySrc.is_a?(Entite)

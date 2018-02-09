@@ -22,6 +22,7 @@ class Terrain
     i = 1
     while @@entities.has_key?(nameTmp)
       nameTmp = name + i.to_s
+      i += 1
     end
     return nameTmp
   end
@@ -69,7 +70,7 @@ class Terrain
         if isOut(proj)
           puts "delete projectile " + proj.name()
           vProj = @@entities[proj.name][1]
-          vProj.setDead()
+          vProj.delete()
           Projectile::projectilesActifs.delete(proj)
         end
       end
@@ -94,12 +95,19 @@ class Terrain
     @game.show()
   end
 
-  def armeModelUpdate(action, mArme)
-    vArme = @@armesAuSol[mArme.name][1]
+  def armeModelUpdate(action, mArme, content = nil)
 
     case action
     when Action::WEAPON_BROKE
+      @game.player.setWeapon()
+      @player.arme=nil
+
+    when Action::ADD_PROJECTILES
+      content.each{|proj|
+        addProjectile(proj)
+      }
     when Action::ENTITY_MOVED
+      vArme = @@armesAuSol[mArme.name][1]
       puts("#{vArme.nameId()} move to #{mArme.position['x']}, #{mArme.position['y']}")
       vArme.moveTo(mArme.position['x'], mArme.position['y'])
     end
@@ -115,6 +123,7 @@ class Terrain
 
     when Action::ENTITY_MOVED
       vEntite.moveTo(mEntite.position['x'], mEntite.position['y'])
+
     when Action::ENTITY_HIT
       vEntite.setHit()
       if mEntite == @player
@@ -141,15 +150,15 @@ class Terrain
     when Action::USER_KEY
       case content
       when Gosu::MS_LEFT
-        #       TODO @player.attaque
+        @player.attaquer(@game.getCursorPos())
         @game.player.setAttack(Attaque::ESTOC)
       when Gosu::MS_RIGHT
         if rand(2) == 0
-          for i in 0..6
+          for i in 0..rand(6..12)
             @game.player.moveUp()
           end
         else
-          for i in 0..6
+          for i in 0..rand(6..12)
             @game.player.moveDown()
           end
         end
@@ -180,15 +189,15 @@ class Terrain
   def addProjectile(proj)
     puts("add projectile")
     proj.add_observer(self, :entiteModelUpdate)
-    newName = getNewName(proj.name())
-    map = Hash[newName => [proj, @game.newTeacher(proj.name(), newName, self, false)]]
+    newName = Terrain::getNewName(proj.name())
+    map = Hash[newName => [proj, @game.newArme(proj.name(), newName, self, false)]]
     proj.name=(newName)
     @@entities.merge!(map)
   end
 
   def self.getEntitiesModel
     ret = []
-    for ent in @@entities
+    @@entities.each_value do |ent|
       ret << ent[0]
     end
     return ret
