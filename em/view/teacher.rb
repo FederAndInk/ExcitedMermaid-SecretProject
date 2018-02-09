@@ -163,7 +163,7 @@ class Teacher
         setIdle()
       end
     elsif @state == "dead"
-      @m = [Gosu.milliseconds / 150].first()
+      @m = [Gosu.milliseconds / 120].first()
       @m -= @mbegin
       if @isPrio and @m < @die.length
         @image = @die.at(@m)

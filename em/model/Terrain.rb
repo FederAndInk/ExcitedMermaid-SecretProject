@@ -55,8 +55,6 @@ class Terrain
     @game.boss=(@@entities["Ceret"][1])
     @boss = @@entities["Ceret"][0]
     @game.setPvB(@boss.vie, @boss.vie_max)
-      @@entities["Blanchon"][1].setWeapon("Regle", WEAPONTYPE::MELEE)
-      @@entities["Blanchon"][1].setAttack("estoc")
 
     #    @game.addFunction(lambda{
     #      if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length < 3))
@@ -190,6 +188,7 @@ class Terrain
       when Gosu::MS_LEFT
         @player.attaquer(@game.getCursorPos())
         @game.player.setAttack(Attaque::ESTOC)
+        @boss.perdreVie(1, @player, [])
       when Gosu::MS_RIGHT
         if rand(2) == 0
           for i in 0..rand(6..12)
