@@ -28,8 +28,8 @@ class Terrain
   #
   # Accessor Methods
   #
-  def initialize()
-    @game = Game.new()
+  def initialize(game)
+    @game = game
     @game.add_observer(self,:gameUpdate)
 
     newEntite(EntiteList::BLANCHON, 540, 920, true)
@@ -54,11 +54,11 @@ class Terrain
             Projectile::projectilesActifs.delete(proj)
           end
         end
+        sleep(0.5)
       end
     end
 
     @game.show()
-
   end
 
   def entiteModelUpdate(action, mEntite, content = nil)
@@ -70,7 +70,6 @@ class Terrain
     when Action::WEAPON_BROKE
 
     when Action::ENTITY_MOVED
-      puts("#{vEntite.nameId()} move to #{mEntite.position['x']}, #{mEntite.position['y']}")
       vEntite.moveTo(mEntite.position['x'], mEntite.position['y'])
     when Action::ENTITY_HIT
       vEntite.setHit()
@@ -89,7 +88,6 @@ class Terrain
       mEntite = @@entities[vEntity.nameId()][0]
       if mEntite
         mEntite.position = vEntity.getPosition()
-        puts("#{vEntity.nameId()} is on #{mEntite.position['x']}, #{mEntite.position['y']}")
       end
     end
   end
@@ -120,7 +118,7 @@ class Terrain
 
     map = Hash[entite.name() => [entite, @game.newTeacher(perso[:name], entite.name(), self, isPrio)]]
     @@entities.merge!(map)
-    
+
     entite.deplacer(x, y)
   end
 

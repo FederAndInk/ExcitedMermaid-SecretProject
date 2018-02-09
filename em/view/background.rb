@@ -8,6 +8,7 @@ class Background
     @lifeBar = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPVx20.png", false)
     @life = Gosu::Image.new(window,ASSETPATH+"IHM-PVPleinx20.png", false)
     @Nlife = Gosu::Image.new(window,ASSETPATH+"IHM-PVVidex20.png", false)
+   
 
     @buffCase = Gosu::Image.new(window,ASSETPATH+"IHM-TableauAmeliorationx20.png", false)
     @portrait = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPortraitx20.png", false)
@@ -61,21 +62,19 @@ class Background
         @pvArrayB.push(0)
       end
     end
-    puts "#{@pvArrayB}"
   end
   
   def addBuff(name)
     picture = Gosu::Image.new(@window,ASSETPATH+"#{name}Buffx20.png", false)
     @buffArray.push(picture)
-    puts"#{@buffArray}"
   end
 
   def removeBuff(pos)
     @buffArray.delete_at(pos)
-    puts"#{@buffArray}"
   end
 
   def draw
+    
     @wall.draw 0,0,0
     @portrait.draw 40,40, 0
     @portrait.draw 4200, 40, 0

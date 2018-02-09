@@ -2,18 +2,25 @@ require 'gosu'
 require 'observer'
 require 'em/view/teacher'
 require 'em/view/background'
+require 'em/model/Actions'
 
 class Game < Gosu::Window
   include(Observable)
   attr_reader(:player)
-  def initialize
+  def initialize()
     super 4800,2660, false
-
+    fullscreen=($fullsc)
+    @mus = $music
+    @vol = $volume
     @toDraw = []
     @background =  Background.new(self, "classroom")
     @toDraw << @background
-
+    @gameOver = false
     @keys = Array.new()
+    @cursorPicture = Gosu::Image.new(self, ASSETPATH+"Curseurx20.png", false)
+    @playButton = Gosu::Image.new(self,ASSETPATH+"jouer.png", false)
+    @rejouer = MenuItem.new(self,@playButton,self.width/2-150, self.height/2,9999,lambda{notify_observers(Action::GAMEOVER, self)},"REJOUER",nil, true)
+    @quitter = MenuItem.new(self,@playButton,self.width/2-150,self.height/2+250,9999,lambda{self.close},"QUITTER",nil, true)
 
   end
 
@@ -24,12 +31,19 @@ class Game < Gosu::Window
   end
 
   def draw
-    @toDraw.each(){ |drawable|
-      drawable.draw
-      if drawable.class.method_defined?("setPrio")
-        drawable.setPrio()
-      end
-    }
+    @cursorPicture.draw(self.getCursorPos()[0]-40,self.getCursorPos()[1]-40,10000, 0.2, 0.2)
+    if !@gameOver
+      @toDraw.each(){ |drawable|
+        drawable.draw
+        if drawable.class.method_defined?("setPrio")
+          drawable.setPrio()
+        end
+      }
+    else
+      @back.draw 0,0,990,self.width.to_f/@back.width.to_f, self.height.to_f/@back.height.to_f
+      @rejouer.draw(0.1, 0.1)
+      @quitter.draw(0.1, 0.1)
+    end
   end
 
   def deleteEntity(entity)
@@ -41,13 +55,16 @@ class Game < Gosu::Window
     if ["z","q","s","d"].include?(k)
       @keys.push(k)
     end
-    if key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE
+    if key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE and !@gameOver
       #      @player.setAttack("Estoc")
       changed()
       notify_observers(Action::USER_KEY, key)
       #    elsif key == Gosu::MS_RIGHT
       #      @player.setAttack("Bas")
       #       notify_observers(key, self)
+    elsif @gameOver
+      @quitter.clicked()
+      @rejouer.clicked()
     end
   end
 
@@ -56,6 +73,11 @@ class Game < Gosu::Window
     if ["z","q","s","d"].include?(k)
       @keys.delete(k)
     end
+  end
+
+  def gameOver
+    @back = Gosu::Image.new(self,ASSETPATH+"Jaquette.png", false)
+    @gameOver = true
   end
 
   def player=(player)
@@ -72,23 +94,27 @@ class Game < Gosu::Window
   end
 
   def update
-    case @keys.last()
-    when 'z'
+    if(@keys.include?('z'))
       @player.moveUp()
       @player.setmoving
-
-    when 's'
+    end
+    
+    if @keys.include?('s')
       @player.moveDown()
       @player.setmoving
-
-    when 'd'
+    end
+    
+    if @keys.include?('d')
       @player.moveRight()
       @player.setmoving
+    end
 
-    when 'q'
+    if @keys.include?('q')
       @player.moveLeft()
       @player.setmoving
-    else
+    end
+
+    if @keys.empty?()
       @player.setIdle
     end
     #        if button_down?(Gosu::MS_LEFT)
@@ -97,6 +123,8 @@ class Game < Gosu::Window
     #      @player.setAttack("meh")
 
     #        end
+    @quitter.update()
+    @rejouer.update()
   end
 
   def setPvP(vie, vieMax)
