@@ -53,7 +53,7 @@ def checkPortee
   oui2 = @position["y"] >= -@departAbs[0]*Math::sin(anglemax) + @departAbs[1]*Math::cos(anglemax) +  ((@hitbox[1]["x"]+departAbs[0])*Math::sin(anglemax)) - ((@hitbox[1]["y"]+departAbs[1])*Math::cos(anglemax)) + (@hitbox[1]["y"]+departAbs[1])
     if(oui && oui2) 
       changed()
-      notify_observers(Action::ENTITY_DIED, self, self)
+      notify_observers(Action::ENTITY_DIED, self)
     end
   end  
   protected

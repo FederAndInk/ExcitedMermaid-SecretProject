@@ -2,9 +2,10 @@
 #
 #
 require 'em/model/Entite'
+require 'observer'
 
 class Projectile < Entite
-
+  include(Observable)
   @@projectilesActifs = Array.new
 
   #
@@ -60,7 +61,8 @@ class Projectile < Entite
       newCopy.direction= direction
 
       @@projectilesActifs.push(newCopy)
-
+#      changed()
+#      notify_observers(Action::ADD_PROJECTILE, newCopy)
     else
       puts "c'est pas une entite!"
     end
@@ -107,7 +109,7 @@ class Projectile < Entite
   def checkPortee
     if((@direction[0] >= 0 && @position["x"] >= (@departAbs[0] + @portee)) || (@direction[0] <= 0 && @position["x"] <= (@departAbs[0] - @portee)))
       changed()
-      notify_observers(Action::ENTITY_DIED, self, self)
+      notify_observers(Action::ENTITY_DIED, self)
     end
   end  
   protected

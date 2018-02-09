@@ -8,8 +8,8 @@ class Background
     @lifeBar = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPVx20.png", false)
     @life = Gosu::Image.new(window,ASSETPATH+"IHM-PVPleinx20.png", false)
     @Nlife = Gosu::Image.new(window,ASSETPATH+"IHM-PVVidex20.png", false)
+   
 
-    #FIXME : add methods changePortraitBoss/Player
     @buffCase = Gosu::Image.new(window,ASSETPATH+"IHM-TableauAmeliorationx20.png", false)
     @portrait = Gosu::Image.new(window,ASSETPATH+"IHM-TableauPortraitx20.png", false)
     case room
@@ -23,7 +23,15 @@ class Background
       @pvArrayB = []
     end
   end
-
+  
+  def setPlayer(player)
+    @player = player
+  end
+  
+  def setBoss(boss)
+    @boss = boss
+  end
+  
   def setPvP(vie, vieMax)
     @pvArrayP.clear()
     if vie < vieMax
@@ -54,27 +62,20 @@ class Background
         @pvArrayB.push(0)
       end
     end
-    puts "#{@pvArrayB}"
   end
-
-  #  def addBuff(nom)
-  #    picture = Gosu::Image.new(window,ASSETPATH+"#{nom}Buffx20", false)
-  #    @buffArray.merge({nom, picture})
-  #  end
+  
   def addBuff(name)
     picture = Gosu::Image.new(@window,ASSETPATH+"#{name}Buffx20.png", false)
     @buffArray.push(picture)
-    puts"#{@buffArray}"
   end
 
   def removeBuff(pos)
     @buffArray.delete_at(pos)
-    puts"#{@buffArray}"
   end
 
   def draw
+    
     @wall.draw 0,0,0
-    #FIXME : add methods portrait
     @portrait.draw 40,40, 0
     @portrait.draw 4200, 40, 0
     if @player
@@ -90,14 +91,14 @@ class Background
     end
 
     if @boss
-      if @pvArrayB.count(1) == 0
-        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Fullx20.png", false)
-      elsif @pvArrayB.count(1) >= @pvArrayB.length-1
-        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Lowx20.png", false)
-      else @pvArrayB.count(1) > 1 and @pvArrayB.count(1) < @pvArrayB.length()
+#      if @pvArrayB.count(1) == 0
+#        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Fullx20.png", false)
+#      elsif @pvArrayB.count(1) >= @pvArrayB.length-1
+#        @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Lowx20.png", false)
+#      else @pvArrayB.count(1) > 1 and @pvArrayB.count(1) < @pvArrayB.length()
         @Ppicture = Gosu::Image.new(@window,ASSETPATH+"#{@boss.name}Normalx20.png", false)
         #    elsif @pvArrayP.count(1) == @pvArrayP.length()
-      end
+#      end
       @Ppicture.draw 4760,40,2, -1
     end
 
