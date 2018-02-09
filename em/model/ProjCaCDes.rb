@@ -28,6 +28,8 @@ class ProjCaCDes < Projectile
 
   def deplacement
        
+    
+    
     x = @position["x"]*Math::cos(@angleDes) + @position["y"]*Math::sin(@angleDes) + @r[0]
     y =  -@position["x"]*Math::sin(@angleDes) + @position["y"]*Math::cos(@angleDes) + @r[1]
     deplacer(x,y)
@@ -40,7 +42,7 @@ class ProjCaCDes < Projectile
 
     newCopy.r = Array.new
     newCopy.nbdepla = 0
-    newCopy.angleDes = angleDes * Math::PI / 180
+    newCopy.angleDes = direction*(angleDes * Math::PI / 180)
     newCopy.r.push(-((@hitbox[1]["x"]+departAbs[0])*Math::cos(newCopy.angleDes)) - ((@hitbox[1]["y"]+departAbs[1])*Math::sin(newCopy.angleDes)) + (@hitbox[1]["x"]+departAbs[0]))
     newCopy.r.push(((@hitbox[1]["x"]+departAbs[0])*Math::sin(newCopy.angleDes)) - ((@hitbox[1]["y"]+departAbs[1])*Math::cos(newCopy.angleDes)) + (@hitbox[1]["y"]+departAbs[1]))
 
@@ -53,7 +55,7 @@ def checkPortee
   oui2 = @position["y"] >= -@departAbs[0]*Math::sin(anglemax) + @departAbs[1]*Math::cos(anglemax) +  ((@hitbox[1]["x"]+departAbs[0])*Math::sin(anglemax)) - ((@hitbox[1]["y"]+departAbs[1])*Math::cos(anglemax)) + (@hitbox[1]["y"]+departAbs[1])
     if(oui && oui2) 
       changed()
-      notify_observers(Action::ENTITY_DIED, self, self)
+      notify_observers(Action::ENTITY_DIED, self)
     end
   end  
   protected

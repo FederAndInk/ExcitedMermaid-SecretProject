@@ -21,8 +21,8 @@ class Terrain
 end
 
 module EntiteList
-  BLANCHON = {:name => "Blanchon", :entite => Personnage.new(Terrain.getNewName("Blanchon"), 4, 0, 0, 0, 0,0)}
-  CERET = {:name => "Ceret", :entite => Personnage.new(Terrain.getNewName("Ceret"), 4, 0, 0, 0, 0,0)}
+  BLANCHON = {:name => "Blanchon", :entite => Personnage.new(Terrain.getNewName("Blanchon"), 4, 0, 160, 60, 440,600)}
+  CERET = {:name => "Ceret", :entite => Ennemi.new(Terrain.getNewName("Ceret"), 4, 0, 110, 110, 545,560)}
 end
 
 class Terrain
@@ -30,21 +30,41 @@ class Terrain
   # Accessor Methods
   #
   def initialize()
-    @game = Game.new(lambda{
-      if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length <3))
+    @intervalleApparitionArme = 3
+    @lastApparitionArme = Time.now 
+    
+    @intervalleDepla =2
+    @lastDepla = Time.now 
+    
+    @game = Game.new
+    
+    newEntite(EntiteList::BLANCHON, 540, 920)
+    @game.player=(@@entities["Blanchon"][1])
+    @player=(@@entities["Blanchon"][0])
+      
+    newEntite(EntiteList::CERET, 4020, 1000)
+      
+    @game.addFunction(lambda{
+      if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@armesAuSol.length < 3))
         newArmeAleatoireAuSol()
         @intervalleApparitionArme = rand(5...16)
-        @lastApparitionArme = Time.now 
+        @lastApparitionArme = Time.now
+      end
+      
+      
+      @@entities.each do
+        |key,value| 
+        if(value[0].class.name == "Ennemi" && @lastDepla + @intervalleDepla <=Time.now)
+        @lastDepla= value[0].deplacerEnnemi(@player.getHitboxAbs)
+        end
       end
     })
     
-    @intervalleApparitionArme = 3
-    @lastApparitionArme = Time.now 
+    
 
-    newEntite(EntiteList::BLANCHON, 540, 920)
-    @game.player=(@@entities["Blanchon"][1])
+    
 
-    newEntite(EntiteList::CERET, 4020, 1000)
+    
    
 
     @game.show()

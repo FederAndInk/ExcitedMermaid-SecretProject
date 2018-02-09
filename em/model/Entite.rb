@@ -92,6 +92,19 @@ class Entite < ElementGraphique
     if(!subitEffet?(Effect::ROOT.name))
       @position["x"] += deplaX -malusX +bonusX
       @position["y"] += deplaY -malusY +bonusY
+        
+      if((@position["x"]) < 640-150)
+        @position["x"]= 640-150
+      end
+      if((@position["x"]) > 4800-480)
+        @position["x"]=4800-480
+      end
+      if((@position["y"]) < 100)
+        @position["y"]=100
+      end 
+      if((@position["y"]) > 2200-640)
+        @position["y"]=2200-640
+      end    
       changed()
       notify_observers(Action::ENTITY_MOVED, self)
     end

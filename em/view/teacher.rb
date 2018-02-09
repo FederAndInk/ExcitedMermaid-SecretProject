@@ -62,6 +62,8 @@ class Teacher
     end
     @flip = -1
   end
+  
+
 
   def moveRight
     @posx += SPEED if ((@posx - SPEED) < 4800-480)

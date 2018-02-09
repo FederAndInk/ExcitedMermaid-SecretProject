@@ -28,13 +28,16 @@ def copyAndActive(name,degats,departAbs, direction, entitySrc)
 
     puts entitySrc.class
     if entitySrc.is_a?(Entite)
+      directionY = 2
+      
       newCopy.name= name
       newCopy.degats = degats
-      newCopy.y_limit = direction[1]*direction[1]
+      newCopy.y_limit = directionY*directionY
       newCopy.departAbs = departAbs
       newCopy.deplacer(departAbs[0],departAbs[1])
       newCopy.entitySrc= entitySrc
       newCopy.direction= direction
+      newCopy.direction[1] = directionY
 
     else
       puts "c'est pas une entite!"

@@ -5,16 +5,19 @@ require 'em/view/background'
 
 class Game < Gosu::Window
   attr_accessor(:player)
-  def initialize(function)
+  def initialize
     super 4800,2660, false
 
-    @function = function
     
     @toDraw = []
     @toDraw << Background.new(self, "classroom")
 
     @keys = Array.new()
 
+  end
+  
+  def addFunction(function)
+    @function = function
   end
 
   def newTeacher(name, nameId, observer, isPrio = false)
