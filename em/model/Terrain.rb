@@ -39,10 +39,9 @@ class Terrain
   def initialize(game)
     @game = game
     @game.add_observer(self,:gameUpdate)
+
     @intervalleApparitionArme = 3
     @lastApparitionArme = Time.now
-
-    @game = Game.new()
 
     newEntite(EntiteList::BLANCHON, 540, 920, true)
     @game.player=(@@entities["Blanchon"][1])
@@ -59,7 +58,7 @@ class Terrain
       if((@lastApparitionArme + @intervalleApparitionArme <=Time.now) && (@@nbArmes < 3))
         @@nbArmes += 1
         newArmeAleatoireAuSol()
-        @intervalleApparitionArme = rand(5...16)
+        @intervalleApparitionArme = rand(5...26)
         @lastApparitionArme = Time.now
       end
 
@@ -77,11 +76,17 @@ class Terrain
 
       # ramasse arme loop
       if(!@player.arme())
-        @@armesAuSol.each_value do |arme|
+        ramasse = false
+        @@armesAuSol.each do |key, arme|
           @player.ramasserArme(arme[0])
-        end
-        if(@player.arme())
-          @@armesAuSol[@player.arme().name()][1].delete()
+          if(@player.arme() && !ramasse)
+            ramasse = true
+            vArme = arme[1]
+            @game.player().setWeapon(vArme.name(), @player.arme().weaponType())
+            vArme.delete()
+            @@armesAuSol.delete(key)
+            @@nbArmes -=1
+          end
         end
       end
     })
@@ -137,11 +142,22 @@ class Terrain
       case content
       when Gosu::MS_LEFT
         #       TODO @player.attaque
-        @game.player.setAttack(Attaque::BAS)
+        @game.player.setAttack(Attaque::ESTOC)
       when Gosu::MS_RIGHT
-
+        if rand(2) == 0
+          for i in 0..6
+            @game.player.moveUp()
+          end
+        else
+          for i in 0..6
+            @game.player.moveDown()
+          end
+        end
       when Gosu::KB_SPACE
-        #        @game.player.
+        if @player.arme
+          @game.player.setWeapon()
+          @player.arme=nil
+        end
       end
     end
   end
@@ -208,8 +224,8 @@ class Terrain
 
     x = rand(210..3800)
     x1 = rand(210..3800)
-    y = rand(770..2050)
-    y1 = rand(770..2050)
+    y = rand(770..1800)
+    y1 = rand(770..1800)
 
     x = rand(1..2) == 1 ? x : x1
     y = rand(1..2) == 1 ? y : y1

@@ -1,20 +1,19 @@
 require 'em/model/Entite'
 
 class EntiteAttaquante < Entite
-  attr_reader(:arme)
-  
+  attr_accessor(:arme)
   def initialize(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y, posArme, arme = nil)
-      super(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y)
-      @arme = arme
-      @posArme =posArme 
+    super(name, vie_max, posHb1_x,posHb1_y,posHb2_x,posHb2_y)
+    @arme = arme
+    @posArme =posArme
   end
-  
+
   def attaquer(direction)
     if(@arme != nil && !subitEffet?(Effect::BLIND.name))
       @arme.activer(posArme,direction,self)
     end
   end
-  
+
   def ramasserArme(arme)
     if(arme.class.name == "Arme" && @arme == nil && self.isCollidedTo(arme))
       @arme = arme

@@ -10,7 +10,7 @@ end
 
 class Teacher
   include(Observable)
-  attr_reader :name, :nameId, :posy, :prio, :flip
+  attr_reader :name, :nameId, :posy, :prio, :flip, :state
 
   SPEED = 20
   ATTACKSPEED = 75
@@ -55,9 +55,13 @@ class Teacher
     @posy = y
   end
 
-  def setWeapon(weapon, weaponType)
+  def setWeapon(weapon = nil, weaponType = nil)
     @weapon = weapon
-    @weaponPicture = Gosu::Image.new(@meh, ASSETPATH+"#{weapon}x20.png", false)
+    if weapon != nil
+      @weaponPicture = Gosu::Image.new(@meh, ASSETPATH+"#{weapon}x20.png", false)
+    else
+      @weaponPicture = nil
+    end
     @weaponType = weaponType
   end
 
@@ -82,6 +86,7 @@ class Teacher
   def setAttack(type = "rien")
     #      puts "#{@attack}"
     @attack = type
+    @attackS = type
     @attackBegin = [Gosu.milliseconds / ATTACKSPEED].first()
     @mBegin = [Gosu.milliseconds / ATTACKSPEED].first()
   end
@@ -122,7 +127,7 @@ class Teacher
     @state = "dead"
     @mbegin = [Gosu.milliseconds / 120].first()
   end
-  
+
   def delete()
     @meh.deleteEntity(self)
   end
@@ -173,7 +178,7 @@ class Teacher
     #    oy = @posy + 231
     oy = @posy + 231
     by = @posy + 320
-    
+
     if @flip == 1
       bx = @posx + 280
       ox = @posx + 273
@@ -181,7 +186,7 @@ class Teacher
       bx = @posx + 280 - 535
       ox = @posx + 273 - 537
     end
-    
+
     cur = @meh.getCursorPos()
     ax = cur[0]
     ay = cur[1]
@@ -211,28 +216,8 @@ class Teacher
     #    else
     #    end
 
-    #attack handler draw
-    if (@attack == Attaque::ESTOC or @attack == Attaque::BAS)
-      #        @image = @walk.at(@i.first())
-      @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attack}x20.png",640,640)
-      @m = [Gosu.milliseconds / ATTACKSPEED].first() - @attackBegin
-      @attackPicture = @mele.at(@m)
-      if @attackPicture # test si on sort pas du vecteur
-        if @flip == -1
-          @attackPicture.draw @posx-220, @posy, @prio, @flip
-        else
-          @attackPicture.draw @posx+220, @posy, @prio, @flip
-        end
-      end
-      if (@m >= @mele.length()-1)
-        setAttack()
-      end
-    end
-    #      puts(@weaponType)
-
     # entite draw
     @image.draw @posx, @posy, @prio, @flip, 1, colour
-
     if @state == "dead" or @state == "hit" or !@isPrio
     elsif @weaponType == WEAPONTYPE::RANGED and !(@state == "dead" or @state == "hit")
       pointa = (@arm.width().to_f - (@arm.width().to_f - 273.0)) / @arm.width.to_f
@@ -243,9 +228,11 @@ class Teacher
       #      puts(angle)
       if @flip == 1
         @weaponPicture.draw_rot(@posx+273, @posy+231,@prio, angle, pointa, pointb, @flip)
+        drawStand()
         @arm.draw_rot @posx+273, @posy+231,@prio, angle, pointa, pointb, @flip
       else
         @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, angle, pointa, pointb, @flip)
+        drawStand()
         @arm.draw_rot @posx-273, @posy+231,@prio, angle, pointa, pointb, @flip
       end
     elsif @weaponPicture
@@ -253,6 +240,7 @@ class Teacher
       pointb = (@arm.height().to_f - (@arm.height().to_f - 231.0)) / @arm.height().to_f
       if @j== 0
         @weaponPicture.draw @posx,@posy,@prio, @flip
+        drawStand()
         @arm.draw @posx, @posy, @prio, @flip, 1
       end
       #      attack handler draw
@@ -263,9 +251,11 @@ class Teacher
         if @j < 170
           if @flip == 1
             @weaponPicture.draw_rot(@posx+273, @posy+231,@prio, 180+20+@j, pointa, pointb, @flip)
+            drawStand()
             @arm.draw_rot @posx+273, @posy+231,@prio, 180+20+@j, pointa, pointb, @flip
           else
             @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, 180+20+@j, pointa, pointb, @flip)
+            drawStand()
             @arm.draw_rot @posx-273, @posy+231,@prio, 180+20+@j, pointa, pointb, @flip
           end
           @j += 8
@@ -280,12 +270,14 @@ class Teacher
         if @j < 90
           if @flip == 1
             @weaponPicture.draw_rot(@posx+273, @posy+231,@prio, -@j, pointa, pointb, @flip)
+            drawStand()
             @arm.draw_rot @posx+273, @posy+231,@prio, -@j, pointa, pointb, @flip
           else
             @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, -@j, pointa, pointb, @flip)
+            drawStand()
             @arm.draw_rot @posx-273, @posy+231,@prio, -@j, pointa, pointb, @flip
           end
-          @j += 3
+          @j += 5
         else
           @j = 0
           setAttack()
@@ -296,6 +288,27 @@ class Teacher
       end
     else
       @arm.draw @posx, @posy, @prio, @flip, 1
+    end
+  end
+
+  private
+
+  def drawStand
+    if (@attackS == Attaque::ESTOC or @attackS == Attaque::BAS)
+      #        @image = @walk.at(@i.first())
+      @mele = Gosu::Image.load_tiles(ASSETPATH+"Coup#{@attackS}x20.png",640,640)
+      @m = [Gosu.milliseconds / ATTACKSPEED].first() - @attackBegin
+      @attackPicture = @mele.at(@m)
+      if @attackPicture # test si on sort pas du vecteur
+        if @flip == -1
+          @attackPicture.draw @posx-220, @posy, @prio, @flip
+        else
+          @attackPicture.draw @posx+220, @posy, @prio, @flip
+        end
+      end
+      if (@m >= @mele.length()-1)
+        @attackS = "rien"
+      end
     end
   end
 end

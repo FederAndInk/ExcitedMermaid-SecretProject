@@ -11,7 +11,7 @@ class Game < Gosu::Window
   def initialize()
     super 4800,2660, false
     fullscreen=($fullsc)
-    
+
     @mus = $music
     @vol = $volume
     @toDraw = []
@@ -27,9 +27,9 @@ class Game < Gosu::Window
   end
 
   def setFunction(function)
-   @function = function
+    @function = function
   end
-  
+
   def newTeacher(name, nameId, observer, isPrio = false)
     @toDraw << Teacher.new(self, name, nameId, isPrio)
     @toDraw.last().add_observer(observer, :entityViewUpdate)
@@ -67,7 +67,8 @@ class Game < Gosu::Window
     if ["z","q","s","d"].include?(k)
       @keys.push(k)
     end
-    if key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE and !@gameOver
+    
+    if (key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE) and !@gameOver
       #      @player.setAttack("Estoc")
       changed()
       notify_observers(Action::USER_KEY, key)
@@ -78,13 +79,18 @@ class Game < Gosu::Window
       @quitter.clicked()
       @rejouer.clicked()
     end
+    
   end
 
   def button_up(key)
     k = button_id_to_char(key)
     if ["z","q","s","d"].include?(k)
       @keys.delete(k)
+      if @keys.empty?()
+        @player.setIdle
+      end
     end
+
   end
 
   def gameOver
@@ -111,12 +117,12 @@ class Game < Gosu::Window
       @player.moveUp()
       @player.setmoving
     end
-    
+
     if @keys.include?('s')
       @player.moveDown()
       @player.setmoving
     end
-    
+
     if @keys.include?('d')
       @player.moveRight()
       @player.setmoving
@@ -125,10 +131,6 @@ class Game < Gosu::Window
     if @keys.include?('q')
       @player.moveLeft()
       @player.setmoving
-    end
-
-    if @keys.empty?()
-      @player.setIdle
     end
     #        if button_down?(Gosu::MS_LEFT)
     #      @player.setAttack("Estoc")

@@ -12,7 +12,7 @@ class Arme < Entite
   #
   # Accessor Methods
   #
-  attr_accessor(:durabilite, :durabiliteMax, :projectiles)
+  attr_accessor(:weaponType, :durabilite, :durabiliteMax, :projectiles)
 
   public
 
@@ -23,9 +23,10 @@ class Arme < Entite
   # liste des projectiles que l'arme va envoyer 
   #
   # * _effects_ array
-  def initialize(name, durabilite, durabiliteMax, projectiles)
+  def initialize(name, weaponType, durabilite, durabiliteMax, projectiles)
     super(name, 1, 200, 200, 450, 450)
     
+    @weaponType = weaponType
     @durabilite = durabilite
     @durabiliteMax = durabiliteMax
     @projectiles = projectiles
@@ -83,9 +84,9 @@ class Arme < Entite
   
   
 
-  REGLE = Arme.new("Regle",3,3,[ProjCaCHor.new("Regle",60,10,140,250,180,[])])
-  CHAISE = Arme.new("Chaise",3,3,[ProjCaCDes.new("Chaise",0,20,60,280,200,[Effect::ROOT,Effect::BLIND])])
-  AGRAFEUSE = Arme.new("Agrafeuse",3,3,[ProjDistPerf.new("Agrafeuse",500,280,260,330,300,[Effect::SLOW])])
-  SHURIKEN = Arme.new("Shuriken",3,3,[ProjDist.new("Shuriken",400,200,200,280,280,[])])
+  REGLE = Arme.new("Regle", WEAPONTYPE::MELEE, 3,3,[ProjCaCHor.new("Regle",60,10,140,250,180,[])])
+  CHAISE = Arme.new("Chaise", WEAPONTYPE::MELEE,3,3,[ProjCaCDes.new("Chaise",0,20,60,280,200,[Effect::ROOT,Effect::BLIND])])
+  AGRAFEUSE = Arme.new("Agrafeuse", WEAPONTYPE::RANGED,3,3,[ProjDistPerf.new("Agrafeuse",500,280,260,330,300,[Effect::SLOW])])
+  SHURIKEN = Arme.new("Shuriken", WEAPONTYPE::RANGED,3,3,[ProjDist.new("Shuriken",400,200,200,280,280,[])])
 end
 
