@@ -93,23 +93,27 @@ class Game < Gosu::Window
   end
 
   def update
-    case @keys.last()
-    when 'z'
+    if(@keys.include?('z'))
       @player.moveUp()
       @player.setmoving
-
-    when 's'
+    end
+    
+    if @keys.include?('s')
       @player.moveDown()
       @player.setmoving
-
-    when 'd'
+    end
+    
+    if @keys.include?('d')
       @player.moveRight()
       @player.setmoving
+    end
 
-    when 'q'
+    if @keys.include?('q')
       @player.moveLeft()
       @player.setmoving
-    else
+    end
+
+    if @keys.empty?()
       @player.setIdle
     end
     #        if button_down?(Gosu::MS_LEFT)

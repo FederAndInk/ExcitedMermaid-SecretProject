@@ -1,3 +1,5 @@
+$:.unshift(Dir.pwd)
+
 require 'gosu'
 require 'em/view/menu'
 require 'em/view/MenuItem'
@@ -89,3 +91,5 @@ class MainMenu < Gosu::Window
 end
 
 MainMenu.new.show
+
+

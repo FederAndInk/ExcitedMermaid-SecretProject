@@ -40,11 +40,11 @@ class Terrain
     @threadIHM = Thread.new do
 #        @@entities["Ceret"][1].moveLeft()
 #        @@entities["Ceret"][1].setmoving()
-      @@entities["Blanchon"][1].setWeapon("Regle", WEAPONTYPE::MELEE)
+      @@entities["Blanchon"][1].setWeapon("Regle", WEAPONTYPE::RANGED)
       sleep(2)
       @@entities["Blanchon"][1].setHited()
       sleep(2)
-      @@entities["Blanchon"][1].setAttack("estoc")
+#      @@entities["Blanchon"][1].setAttack("estoc")
       
         
     while true
@@ -67,7 +67,6 @@ class Terrain
     when Action::WEAPON_BROKE
 
     when Action::ENTITY_MOVED
-      puts("#{vEntite.nameId()} move to #{mEntite.position['x']}, #{mEntite.position['y']}")
       vEntite.moveTo(mEntite.position['x'], mEntite.position['y'])
     end
   end
@@ -79,7 +78,6 @@ class Terrain
     when Action::ENTITY_MOVED
       if mEntite
         mEntite.position = vEntity.getPosition()
-        puts("#{vEntity.nameId()} is on #{mEntite.position['x']}, #{mEntite.position['y']}")
       end
     end
   end

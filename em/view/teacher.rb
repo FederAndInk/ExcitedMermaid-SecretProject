@@ -178,15 +178,21 @@ class Teacher
     #    if(angle < 0)
     #      angle = 180 + angle;
     #    end
-    a = (by-oy ) / ((bx-ox)*1000000000000**100)
+    a = (by.to_f-oy.to_f ) / ((bx.to_f-ox.to_f))
     b = oy-a*ox
     y = a*ax+b
+    if angle < 0
+      angle = angle + 180
+    end
     if (y > ay)
       angle = angle + 180
     end
-    #    if angle < 0
-    #      angle = angle + 180
-    #    end
+    if (angle > 170 && angle < 180)
+      angle += 540
+    end
+    if (angle > 351 && angle < 360)
+      angle += 540
+    end
     #    if @weaponType == MELEE
     #      @arm.draw @posx, @posy, @prio, @flip
     #    else

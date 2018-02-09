@@ -1,4 +1,4 @@
 ASSETPATH = "em/assets/"
-$fullsc = true
+$fullsc = false
 $music = true
 $volume = 0.5
