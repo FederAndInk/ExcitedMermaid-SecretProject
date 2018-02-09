@@ -40,8 +40,15 @@ class Arme < Entite
     @projectiles.each { |proj|
       # TODO : ici il y avait que trois param
       # TODO : et il en faut 6 pour la chaise !! SEE : ProjCaCDes
-      newProj = proj.copyAndActive(proj.name(), @degats, departAbs, direction, entitySrc)
+      if(proj.class.name == "ProjCaCDes")
+        newProj = proj.copyAndActive(proj.name(), @degats, departAbs, direction, 8,entitySrc)
+      else
+        newProj = proj.copyAndActive(proj.name(), @degats, departAbs, direction, entitySrc)
+      end
+      
       newProjs << newProj
+      
+      
       modifieur = 0
       if(subitEffet?(Effect::STRENGTH.name))
         modifieur +=1

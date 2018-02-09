@@ -131,6 +131,25 @@ class Terrain
 
   end
 
+  def projectileModelUpdate(action, mArme)
+
+    vArme = @@entities[mArme.name]
+    if vArme
+      vArme = vArme[1]
+
+      case action
+      when Action::ENTITY_MOVED
+        puts("#{vArme.nameId()} move to #{mArme.position['x']}, #{mArme.position['y']}")
+        vArme.moveTo(mArme.position['x'], mArme.position['y'])
+      when Action::ENTITY_DIED
+
+        Projectile::projectilesActifs.delete(mArme)
+        vArme.delete()
+      end
+
+    end
+  end
+
   def entiteModelUpdate(action, mEntite)
     vEntite = @@entities[mEntite.name][1]
     case action
@@ -205,7 +224,7 @@ class Terrain
 
   def addProjectile(proj)
     puts("add projectile")
-    proj.add_observer(self, :entiteModelUpdate)
+    proj.add_observer(self, :projectileModelUpdate)
     newName = Terrain::getNewName(proj.name())
     map = Hash[newName => [proj, @game.newArme(proj.name(), newName, self, false)]]
     proj.name=(newName)

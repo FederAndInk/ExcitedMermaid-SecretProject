@@ -66,3 +66,4 @@ class Ennemi < EntiteAttaquante
   
 end
 
+
