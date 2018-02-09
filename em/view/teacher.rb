@@ -269,8 +269,8 @@ class Teacher
             @weaponPicture.draw_rot(@posx+273, @posy+231,@prio, -@j, pointa, pointb, @flip)
             @arm.draw_rot @posx+273, @posy+231,@prio, -@j, pointa, pointb, @flip
           else
-            @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, -@j, pointa, pointb, @flip)
-            @arm.draw_rot @posx-273, @posy+231,@prio, -@j, pointa, pointb, @flip
+            @weaponPicture.draw_rot(@posx-273, @posy+231,@prio, @j, pointa, pointb, @flip)
+            @arm.draw_rot @posx-273, @posy+231,@prio, @j, pointa, pointb, @flip
           end
           @j += 3
         else
