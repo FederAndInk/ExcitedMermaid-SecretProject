@@ -10,6 +10,9 @@ require("em/model/Terrain")
 class MainMenu < Gosu::Window
   def initialize
     super(640, 640, false)
+      @music = Gosu::Song.new("em/music/MusiqueMenu.mp3")
+      @music.volume = $volume
+      @music.play(true)
     @cursor = Gosu::Image.new(self, ASSETPATH+"Curseurx20.png", false)
     x = 0
     y = self.height - 100
@@ -39,7 +42,13 @@ class MainMenu < Gosu::Window
         $music = false
       else $music = true
       end },
-    lambda { $volume += 0.1 }, lambda{$volume -= 0.1}, lambda{@option.clean()}]
+                                    lambda { if $volume<1
+                                               $volume += 0.1
+                                             end 
+                                      @music.volume = $volume}, lambda{if $volume> 0
+                                      $volume -= 0.1
+                                       end
+                                      @music.volume = $volume}, lambda{@option.clean()}]
     actions = Array[lambda {
       game = Game.new
       game.fullscreen=($fullsc)

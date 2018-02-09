@@ -14,6 +14,11 @@ class Game < Gosu::Window
 
     @mus = $music
     @vol = $volume
+    if @mus
+      @music = Gosu::Song.new("em/music/MusiqueJeux.mp3")
+      @music.volume = @vol
+      @music.play(true)
+    end
     @toDraw = []
     @background =  Background.new(self, "classroom")
     @toDraw << @background
