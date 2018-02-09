@@ -42,8 +42,12 @@ class MainMenu < Gosu::Window
                                       $music = false 
                                     else $music = true 
                                     end }, 
-                                    lambda { $volume += 0.1 
-                                      @music.volume = $volume}, lambda{$volume -= 0.1
+                                    lambda { if $volume<1
+                                               $volume += 0.1
+                                             end 
+                                      @music.volume = $volume}, lambda{if $volume> 0
+                                      $volume -= 0.1
+                                       end
                                       @music.volume = $volume}, lambda{@option.clean()}]
       actions = Array[lambda { 
         game = Game.new
