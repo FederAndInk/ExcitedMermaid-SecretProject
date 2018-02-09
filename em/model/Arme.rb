@@ -38,6 +38,8 @@ class Arme < Entite
   def activer(departAbs, direction, entitySrc)
     newProjs = []
     @projectiles.each { |proj|
+      # TODO : ici il y avait que trois param
+      # TODO : et il en faut 6 pour la chaise !! SEE : ProjCaCDes
       newProj = proj.copyAndActive(proj.name(), @degats, departAbs, direction, entitySrc)
       newProjs << newProj
       modifieur = 0
@@ -54,6 +56,7 @@ class Arme < Entite
     notify_observers(Action::ADD_PROJECTILES, self, newProjs)
     @durabilite -= 1
     if @durabilite <= 0
+      changed()
       notify_observers(Action::WEAPON_BROKE,self)
     end
   end
@@ -83,9 +86,9 @@ class Arme < Entite
     return arme
   end
 
-  REGLE = Arme.new("Regle", 1, WEAPONTYPE::MELEE, 3,3,[ProjCaCHor.new("Regle",60,10,140,250,180,[])])
-  CHAISE = Arme.new("Chaise", 2, WEAPONTYPE::MELEE,3,3,[ProjCaCDes.new("Chaise",0,20,60,280,200,[Effect::ROOT,Effect::BLIND])])
-  AGRAFEUSE = Arme.new("Agrafeuse", 1, WEAPONTYPE::RANGED,3,3,[ProjDistPerf.new("Agrafeuse",500,280,260,330,300,[Effect::SLOW])])
-  SHURIKEN = Arme.new("Shuriken", 1, WEAPONTYPE::RANGED,3,3,[ProjDist.new("Shuriken",400,200,200,280,280,[])])
+  REGLE = Arme.new("Regle", 1, WEAPONTYPE::MELEE, 5,5,[ProjCaCHor.new("Regle",60,10,140,250,180,[])])
+  CHAISE = Arme.new("Chaise", 2, WEAPONTYPE::MELEE,5,5,[ProjCaCDes.new("Chaise",0,20,60,280,200,[Effect::ROOT,Effect::BLIND])])
+  AGRAFEUSE = Arme.new("Agrafeuse", 1, WEAPONTYPE::RANGED,5,5,[ProjDistPerf.new("Agrafe",500,280,260,330,300,[Effect::SLOW])])
+  SHURIKEN = Arme.new("Shuriken", 1, WEAPONTYPE::RANGED,5,5,[ProjDist.new("Shuriken",400,200,200,280,280,[])])
 end
 

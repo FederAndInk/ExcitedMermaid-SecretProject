@@ -14,7 +14,7 @@ class ProjCaCDes < Projectile
     @r = Array.new(2)
     @nbdepla = 0
   end
-  
+
   def nextStep(entites)
     @nbdepla +=1
     puts ("Déplacement n°" + @nbdepla.to_s)
@@ -27,12 +27,14 @@ class ProjCaCDes < Projectile
   end
 
   def deplacement
-       
+
     x = @position["x"]*Math::cos(@angleDes) + @position["y"]*Math::sin(@angleDes) + @r[0]
     y =  -@position["x"]*Math::sin(@angleDes) + @position["y"]*Math::cos(@angleDes) + @r[1]
     deplacer(x,y)
   end
 
+  # TODO : ici il y avait que trois param
+  # TODO : et il en faut 6 pour la chaise !! SEE : ProjCaCDes
   def copyAndActive(name,degats,departAbs, direction, angleDes,entitySrc)
     newCopy = super(name,degats,departAbs, direction, entitySrc)
 
@@ -46,15 +48,15 @@ class ProjCaCDes < Projectile
 
     return newCopy
   end
-  
-def checkPortee
-  anglemax = -90*Math::PI/180
-  oui =  @position["x"] >=  @departAbs[0]*Math::cos(anglemax) + @departAbs[1]*Math::sin(anglemax) + -((@hitbox[1]["x"]+departAbs[0])*Math::cos(anglemax)) - ((@hitbox[1]["y"]+departAbs[1])*Math::sin(anglemax)) + (@hitbox[1]["x"]+departAbs[0])
-  oui2 = @position["y"] >= -@departAbs[0]*Math::sin(anglemax) + @departAbs[1]*Math::cos(anglemax) +  ((@hitbox[1]["x"]+departAbs[0])*Math::sin(anglemax)) - ((@hitbox[1]["y"]+departAbs[1])*Math::cos(anglemax)) + (@hitbox[1]["y"]+departAbs[1])
-    if(oui && oui2) 
+
+  def checkPortee
+    anglemax = -90*Math::PI/180
+    oui =  @position["x"] >=  @departAbs[0]*Math::cos(anglemax) + @departAbs[1]*Math::sin(anglemax) + -((@hitbox[1]["x"]+departAbs[0])*Math::cos(anglemax)) - ((@hitbox[1]["y"]+departAbs[1])*Math::sin(anglemax)) + (@hitbox[1]["x"]+departAbs[0])
+    oui2 = @position["y"] >= -@departAbs[0]*Math::sin(anglemax) + @departAbs[1]*Math::cos(anglemax) +  ((@hitbox[1]["x"]+departAbs[0])*Math::sin(anglemax)) - ((@hitbox[1]["y"]+departAbs[1])*Math::cos(anglemax)) + (@hitbox[1]["y"]+departAbs[1])
+    if(oui && oui2)
       changed()
       notify_observers(Action::ENTITY_DIED, self)
     end
-  end  
+  end
   protected
 end

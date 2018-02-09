@@ -107,9 +107,12 @@ class Terrain
         addProjectile(proj)
       }
     when Action::ENTITY_MOVED
-      vArme = @@armesAuSol[mArme.name][1]
-      puts("#{vArme.nameId()} move to #{mArme.position['x']}, #{mArme.position['y']}")
-      vArme.moveTo(mArme.position['x'], mArme.position['y'])
+      vArme = @@armesAuSol[mArme.name]
+      if vArme
+        vArme = vArme[1]
+        puts("#{vArme.nameId()} move to #{mArme.position['x']}, #{mArme.position['y']}")
+        vArme.moveTo(mArme.position['x'], mArme.position['y'])
+      end
     end
 
   end
