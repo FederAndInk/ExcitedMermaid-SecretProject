@@ -11,6 +11,14 @@ class EntiteAttaquante < Entite
   def attaquer(direction)
     if(@arme != nil && !subitEffet?(Effect::BLIND.name))
       @arme.activer(@posArme,direction,self)
+      #gestion du sens d'attaque
+      
+      directionAttaque = 1
+      if(direction[0]-@position["x"]<0)
+      directionAttaque = -1
+      end
+      
+      @arme.activer(posArme,directionAttaque,self)
     end
   end
 

@@ -58,7 +58,7 @@ class Projectile < Entite
       newCopy.departAbs = departAbs
       newCopy.deplacer(departAbs[0],departAbs[1])
       newCopy.entitySrc= entitySrc
-      newCopy.direction= direction
+      newCopy.direction= [direction*5,0]
 
       @@projectilesActifs.push(newCopy)
 #      changed()

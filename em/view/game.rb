@@ -26,6 +26,10 @@ class Game < Gosu::Window
 
   end
 
+  def addFunction(function)
+    @function = function
+  end
+
   def setFunction(function)
     @function = function
   end
@@ -67,7 +71,7 @@ class Game < Gosu::Window
     if ["z","q","s","d"].include?(k)
       @keys.push(k)
     end
-    
+
     if (key == Gosu::MS_LEFT or key == Gosu::MS_RIGHT or key == Gosu::KB_SPACE) and !@gameOver
       #      @player.setAttack("Estoc")
       changed()
@@ -79,7 +83,7 @@ class Game < Gosu::Window
       @quitter.clicked()
       @rejouer.clicked()
     end
-    
+
   end
 
   def button_up(key)
@@ -90,7 +94,6 @@ class Game < Gosu::Window
         @player.setIdle
       end
     end
-
   end
 
   def gameOver

@@ -21,7 +21,7 @@ class ProjDist < Projectile
   end
   
   def deplacement
-    deplacer(position["x"] + direction[0],position["y"] + direction[1])
+    deplacer(@position["x"] + @direction[0],@position["y"] + @direction[1])
   end
   
 end

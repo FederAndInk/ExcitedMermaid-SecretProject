@@ -100,6 +100,8 @@ class Teacher
       @flip = -1
     end
   end
+  
+
 
   def moveRight
     if @state != "hit"

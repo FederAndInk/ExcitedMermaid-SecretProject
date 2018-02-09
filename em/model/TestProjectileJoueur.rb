@@ -15,7 +15,7 @@ class Test
   #
   def initialize()
     @entities = Hash.new()
-    @proj = ProjCaCDes.new("projDistPerd",200,0, 0, 4, 10,[Effect::SLOW])
+    @proj = ProjDist.new("projDistPerd",200,0, 0, 4, 10,[Effect::SLOW])
 
     perso = newPerso("Blanchon")
     @perso = perso.values[0]
@@ -42,10 +42,10 @@ distBoule = newProj(ProjDist.name)
     end
   end
 
-  def entiteUpdate(action, entite, entiteAttaquante)
+  def entiteUpdate(action, entite)
     case action
     when Action::ENTITY_DIED
-      puts ("entity : " + entite.name + " died from " + entiteAttaquante.name)
+      puts ("entity : " + entite.name + " died ")
       if(entite.class.superclass.name == "Projectile")
         Projectile.projectilesActifs.delete(entite)
       end
@@ -69,7 +69,7 @@ distBoule = newProj(ProjDist.name)
 
   def newProj(name)
     newName = getNewName(name)
-    proj = @proj.copyAndActive(newName,2,[10,10],[5,2],-1,@ennemi)
+    proj = @proj.copyAndActive(newName,2,[10,10],-1,@ennemi)
     proj.add_observer(self, :entiteUpdate)
     return {newName => proj}
   end
